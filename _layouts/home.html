@@ -1,0 +1,16 @@
+---
+layout: default
+---
+{% if page.content %}
+<div class="home-intro">{{ content }}</div>
+{% endif %}
+
+<ul class="post-list">
+  {% for post in site.posts %}
+  <li class="post-list-item">
+    <a class="post-list-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <time class="post-list-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %B %Y" }}</time>
+    {% if post.subtitle %}<p class="post-list-subtitle">{{ post.subtitle }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
