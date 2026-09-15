@@ -1,0 +1,16 @@
+---
+title: "A little change"
+date: 2016-02-18
+---
+
+I have just started working for the Treasury. It’s a great location in Victoria right next to Westminter Station.
+
+Unfortunately, that is about to change as once again I feel the pull of South London.
+
+Why is this worth mentioning? It means that I will be moving at most 60 meters down the road from my last employer.
+
+Do I care? Not a great deal, I made some great friends at the last job - thats how I got the current role - and hopefully lots more where I am.
+
+Still a new location would have been nice, not to worry, the new friends and collegues will be happy for me to run/play with the old.
+
+After all life is an adventure.
