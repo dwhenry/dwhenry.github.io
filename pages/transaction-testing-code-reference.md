@@ -16,17 +16,16 @@ import {
   transaction,
   type Transaction,
   type TransactionOrKnex,
-} from 'objection'
+} from "objection";
 
-import database from 'shared/config/database'
-import { BaseModel } from 'shared/models/base-model'
-import { resetCapturedExecutionPromiseCallbacks } from 'shared/utils/attach-to-execution-promise'
-import { clearDatabase } from './helpers'
+import database from "shared/config/database";
+import { BaseModel } from "shared/models/base-model";
+import { clearDatabase } from "./helpers";
 
-let skipDepth = 0
+let skipDepth = 0;
 
 function isSkipped(): boolean {
-  return skipDepth > 0
+  return skipDepth > 0;
 }
 
 /**
@@ -39,18 +38,23 @@ function isSkipped(): boolean {
  * Needed for blocks that:
  * - test using real commit/rollback
  *   behaviour themselves or that rely on an empty database state to run.
+ * - avoid when possible
  */
 export function skipTransactionWrapping(reason: string): void {
   before(function () {
-    if (BaseModel.knex() !== database) throw new Error('do not nest skipTransactionWrapping inside a transactionPerDescribe`)
-    skipDepth++
-    console.log(`[transaction-wrapper] skipping — ${reason}`)
-  })
+    if (BaseModel.knex() !== database) {
+      throw new Error(
+        "do not nest skipTransactionWrapping inside a transactionPerDescribe",
+      );
+    }
+    skipDepth++;
+    console.log(`[transaction-wrapper] skipping — ${reason}`);
+  });
 
   after(async function () {
-    skipDepth--
-    await clearDatabase()
-  })
+    skipDepth--;
+    await clearDatabase();
+  });
 }
 
 /**
@@ -60,28 +64,27 @@ export function skipTransactionWrapping(reason: string): void {
  * another test.
  */
 export function transactionPerTest(): void {
-  let previousKnex: TransactionOrKnex
-  let trx: Transaction
+  let previousKnex: TransactionOrKnex;
+  let trx: Transaction;
 
   beforeEach(async function () {
-    resetCapturedExecutionPromiseCallbacks()
-    if (isSkipped()) return
-    previousKnex = BaseModel.knex()
-    trx = await transaction.start(BaseModel)
-    BaseModel.knex(trx)
-  })
+    if (isSkipped()) return;
+    previousKnex = BaseModel.knex();
+    trx = await transaction.start(BaseModel);
+    BaseModel.knex(trx);
+  });
 
   afterEach(async function () {
-    if (isSkipped()) return
+    if (isSkipped()) return;
     // rollback() can itself throw (e.g. the transaction was already aborted
     // by a query error during the test) — knex() must still be restored, or
     // every model stays bound to a dead transaction for the rest of the run.
     try {
-      await trx.rollback()
+      await trx.rollback();
     } finally {
-      BaseModel.knex(previousKnex ?? database)
+      BaseModel.knex(previousKnex ?? database);
     }
-  })
+  });
 }
 
 /**
@@ -99,42 +102,42 @@ export function transactionPerTest(): void {
 export function transactionPerDescribe({
   skipIndividualTransaction = false,
 }: { skipIndividualTransaction?: boolean } = {}): void {
-  let previousKnex: TransactionOrKnex
-  let trx: Transaction
+  let previousKnex: TransactionOrKnex;
+  let trx: Transaction;
   // Tracks whether *this* call actually started a transaction that it now
   // owns and must tear down — rather than re-checking isSkipped() in the
   // teardown hook, which would be thrown off by this same function's own
   // skipIndividualTransaction increment below.
-  let started = false
+  let started = false;
 
   before(async function () {
-    if (isSkipped()) return
-    started = true
-    previousKnex = BaseModel.knex()
-    trx = await transaction.start(BaseModel)
-    BaseModel.knex(trx)
-  })
+    if (isSkipped()) return;
+    started = true;
+    previousKnex = BaseModel.knex();
+    trx = await transaction.start(BaseModel);
+    BaseModel.knex(trx);
+  });
 
   after(async function () {
-    if (!started) return
+    if (!started) return;
     // rollback() can itself throw (e.g. the transaction was already aborted
     // by a query error during the describe) — knex() must still be restored,
     // or every model stays bound to a dead transaction for the rest of the run.
     try {
-      await trx.rollback()
+      await trx.rollback();
     } finally {
-      BaseModel.knex(previousKnex ?? database)
+      BaseModel.knex(previousKnex ?? database);
     }
-  })
+  });
 
   if (skipIndividualTransaction) {
     before(function () {
-      skipDepth++
-    })
+      skipDepth++;
+    });
 
     after(function () {
-      skipDepth--
-    })
+      skipDepth--;
+    });
   }
 }
 ```
