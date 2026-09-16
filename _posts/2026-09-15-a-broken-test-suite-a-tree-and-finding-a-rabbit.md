@@ -11,132 +11,132 @@ date: 2026-09-15
   .ci-diary-sketch svg { display: block; width: 100%; height: auto; border-radius: 8px; }
   .ci-diary-sketch figcaption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .ci-diary-sketch .scene, .ci-diary-sketch .anim { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
-  }
+@media (prefers-reduced-motion: reduce) {
+.ci-diary-sketch .scene, .ci-diary-sketch .anim { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
 
-  .ci-diary-sketch .flash { fill: #ffffff; opacity: 0; }
+.ci-diary-sketch .flash { fill: #ffffff; opacity: 0; }
 
-  .ci-diary-sketch .scene { animation-duration: 24s; animation-timing-function: linear; animation-iteration-count: infinite; }
-  .ci-diary-sketch .scene-idle { animation-name: idle-vis; }
-  .ci-diary-sketch .scene-ci { animation-name: ci-vis; opacity: 0; }
-  .ci-diary-sketch .scene-smash { animation-name: smash-vis; opacity: 0; }
-  .ci-diary-sketch .scene-sign { animation-name: sign-vis; opacity: 0; }
+.ci-diary-sketch .scene { animation-duration: 24s; animation-timing-function: linear; animation-iteration-count: infinite; }
+.ci-diary-sketch .scene-idle { animation-name: idle-vis; }
+.ci-diary-sketch .scene-ci { animation-name: ci-vis; opacity: 0; }
+.ci-diary-sketch .scene-smash { animation-name: smash-vis; opacity: 0; }
+.ci-diary-sketch .scene-sign { animation-name: sign-vis; opacity: 0; }
 
-  @keyframes idle-vis {
-    0%{opacity:1} 12.5%{opacity:1} 13.2%{opacity:0}
-    94%{opacity:0} 94.6%{opacity:1} 100%{opacity:1}
-  }
-  @keyframes ci-vis {
-    0%{opacity:0} 13.2%{opacity:0} 14%{opacity:1}
-    67.5%{opacity:1} 68.2%{opacity:0} 100%{opacity:0}
-  }
-  @keyframes smash-vis {
-    0%{opacity:0} 68.2%{opacity:0} 69%{opacity:1}
-    81.4%{opacity:1} 82.1%{opacity:0} 100%{opacity:0}
-  }
-  @keyframes sign-vis {
-    0%{opacity:0} 81.4%{opacity:0} 82.3%{opacity:1}
-    94%{opacity:1} 94.6%{opacity:0} 100%{opacity:0}
-  }
-  @keyframes flash-pulse {
-    0%,12.8%{opacity:0} 13.2%{opacity:.85} 13.6%{opacity:0}
-    67.8%{opacity:0} 68.2%{opacity:.85} 68.6%{opacity:0}
-    100%{opacity:0}
-  }
-  .ci-diary-sketch .flash { animation: flash-pulse 24s linear infinite; }
+@keyframes idle-vis {
+0%{opacity:1} 12.5%{opacity:1} 13.2%{opacity:0}
+94%{opacity:0} 94.6%{opacity:1} 100%{opacity:1}
+}
+@keyframes ci-vis {
+0%{opacity:0} 13.2%{opacity:0} 14%{opacity:1}
+67.5%{opacity:1} 68.2%{opacity:0} 100%{opacity:0}
+}
+@keyframes smash-vis {
+0%{opacity:0} 68.2%{opacity:0} 69%{opacity:1}
+81.4%{opacity:1} 82.1%{opacity:0} 100%{opacity:0}
+}
+@keyframes sign-vis {
+0%{opacity:0} 81.4%{opacity:0} 82.3%{opacity:1}
+94%{opacity:1} 94.6%{opacity:0} 100%{opacity:0}
+}
+@keyframes flash-pulse {
+0%,12.8%{opacity:0} 13.2%{opacity:.85} 13.6%{opacity:0}
+67.8%{opacity:0} 68.2%{opacity:.85} 68.6%{opacity:0}
+100%{opacity:0}
+}
+.ci-diary-sketch .flash { animation: flash-pulse 24s linear infinite; }
 
-  .ci-diary-sketch #bubble { animation: bubble-pop 24s linear infinite; transform-box: fill-box; transform-origin: 50% 100%; }
-  @keyframes bubble-pop {
-    0%,4%{opacity:0; transform:scale(.5)} 6%{opacity:1; transform:scale(1)}
-    11.2%{opacity:1; transform:scale(1)} 12.5%{opacity:0; transform:scale(.5)} 100%{opacity:0; transform:scale(.5)}
-  }
-  .ci-diary-sketch .type-bounce { animation: type-bounce .46s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
-  .ci-diary-sketch #hand-right { animation-delay: .23s; }
-  @keyframes type-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+.ci-diary-sketch #bubble { animation: bubble-pop 24s linear infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+@keyframes bubble-pop {
+0%,4%{opacity:0; transform:scale(.5)} 6%{opacity:1; transform:scale(1)}
+11.2%{opacity:1; transform:scale(1)} 12.5%{opacity:0; transform:scale(.5)} 100%{opacity:0; transform:scale(.5)}
+}
+.ci-diary-sketch .type-bounce { animation: type-bounce .46s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+.ci-diary-sketch #hand-right { animation-delay: .23s; }
+@keyframes type-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
 
-  .ci-diary-sketch #bar-fill { fill:#2f9e58; transform-box:fill-box; transform-origin:0% 50%; animation: bar-fill 24s linear infinite; }
-  @keyframes bar-fill {
-    0%,14%{ transform:scaleX(0); fill:#2f9e58 }
-    27%{ transform:scaleX(.75); fill:#2f9e58 }
-    27.3%{ transform:scaleX(.75); fill:#e0483f }
-    29.4%{ transform:scaleX(.75); fill:#e0483f }
-    30.2%{ transform:scaleX(0); fill:#2f9e58 }
-    31.7%{ transform:scaleX(0); fill:#2f9e58 }
-    45%{ transform:scaleX(.60); fill:#2f9e58 }
-    45.3%{ transform:scaleX(.60); fill:#e0483f }
-    47.7%{ transform:scaleX(.60); fill:#e0483f }
-    48.4%{ transform:scaleX(0); fill:#2f9e58 }
-    50%{ transform:scaleX(0); fill:#2f9e58 }
-    65%{ transform:scaleX(.99); fill:#2f9e58 }
-    65.3%{ transform:scaleX(.99); fill:#e0483f }
-    67.7%{ transform:scaleX(.99); fill:#e0483f }
-    68.3%{ transform:scaleX(0); fill:#2f9e58 }
-    100%{ transform:scaleX(0); fill:#2f9e58 }
-  }
-  .ci-diary-sketch #fail-1, .ci-diary-sketch #fail-2, .ci-diary-sketch #fail-3 { opacity: 0; }
-  .ci-diary-sketch #fail-1 { animation: fail-1 24s linear infinite; }
-  .ci-diary-sketch #fail-2 { animation: fail-2 24s linear infinite; }
-  .ci-diary-sketch #fail-3 { animation: fail-3 24s linear infinite; }
-  @keyframes fail-1 { 0%,27.2%{opacity:0} 27.5%{opacity:1} 29.4%{opacity:1} 30%{opacity:0} 100%{opacity:0} }
-  @keyframes fail-2 { 0%,45.2%{opacity:0} 45.5%{opacity:1} 47.7%{opacity:1} 48.2%{opacity:0} 100%{opacity:0} }
-  @keyframes fail-3 { 0%,65.2%{opacity:0} 65.5%{opacity:1} 67.7%{opacity:1} 68.1%{opacity:0} 100%{opacity:0} }
+.ci-diary-sketch #bar-fill { fill:#2f9e58; transform-box:fill-box; transform-origin:0% 50%; animation: bar-fill 24s linear infinite; }
+@keyframes bar-fill {
+0%,14%{ transform:scaleX(0); fill:#2f9e58 }
+27%{ transform:scaleX(.75); fill:#2f9e58 }
+27.3%{ transform:scaleX(.75); fill:#e0483f }
+29.4%{ transform:scaleX(.75); fill:#e0483f }
+30.2%{ transform:scaleX(0); fill:#2f9e58 }
+31.7%{ transform:scaleX(0); fill:#2f9e58 }
+45%{ transform:scaleX(.60); fill:#2f9e58 }
+45.3%{ transform:scaleX(.60); fill:#e0483f }
+47.7%{ transform:scaleX(.60); fill:#e0483f }
+48.4%{ transform:scaleX(0); fill:#2f9e58 }
+50%{ transform:scaleX(0); fill:#2f9e58 }
+65%{ transform:scaleX(.99); fill:#2f9e58 }
+65.3%{ transform:scaleX(.99); fill:#e0483f }
+67.7%{ transform:scaleX(.99); fill:#e0483f }
+68.3%{ transform:scaleX(0); fill:#2f9e58 }
+100%{ transform:scaleX(0); fill:#2f9e58 }
+}
+.ci-diary-sketch #fail-1, .ci-diary-sketch #fail-2, .ci-diary-sketch #fail-3 { opacity: 0; }
+.ci-diary-sketch #fail-1 { animation: fail-1 24s linear infinite; }
+.ci-diary-sketch #fail-2 { animation: fail-2 24s linear infinite; }
+.ci-diary-sketch #fail-3 { animation: fail-3 24s linear infinite; }
+@keyframes fail-1 { 0%,27.2%{opacity:0} 27.5%{opacity:1} 29.4%{opacity:1} 30%{opacity:0} 100%{opacity:0} }
+@keyframes fail-2 { 0%,45.2%{opacity:0} 45.5%{opacity:1} 47.7%{opacity:1} 48.2%{opacity:0} 100%{opacity:0} }
+@keyframes fail-3 { 0%,65.2%{opacity:0} 65.5%{opacity:1} 67.7%{opacity:1} 68.1%{opacity:0} 100%{opacity:0} }
 
-  .ci-diary-sketch #retry-btn { opacity: 0; animation: retry-vis 24s linear infinite; }
-  @keyframes retry-vis {
-    0%,27.4%{opacity:0} 27.6%{opacity:1} 30.4%{opacity:1} 30.9%{opacity:0}
-    45.4%{opacity:0} 45.6%{opacity:1} 48.6%{opacity:1} 49.1%{opacity:0}
-    100%{opacity:0}
-  }
-  .ci-diary-sketch #cursor { opacity: 0; animation: cursor-move 24s linear infinite; transform-box: fill-box; transform-origin: 50% 50%; }
-  @keyframes cursor-move {
-    0%,28%{opacity:0; transform:translate(140px,-70px) scale(1)}
-    28.6%{opacity:1; transform:translate(0,0) scale(1)}
-    29.6%{opacity:1; transform:translate(0,0) scale(.8)}
-    30%{opacity:1; transform:translate(0,0) scale(1)}
-    30.6%{opacity:0; transform:translate(0,0) scale(1)}
-    46.2%{opacity:0; transform:translate(140px,-70px) scale(1)}
-    46.8%{opacity:1; transform:translate(0,0) scale(1)}
-    47.8%{opacity:1; transform:translate(0,0) scale(.8)}
-    48.2%{opacity:1; transform:translate(0,0) scale(1)}
-    48.8%{opacity:0; transform:translate(0,0) scale(1)}
-    100%{opacity:0}
-  }
+.ci-diary-sketch #retry-btn { opacity: 0; animation: retry-vis 24s linear infinite; }
+@keyframes retry-vis {
+0%,27.4%{opacity:0} 27.6%{opacity:1} 30.4%{opacity:1} 30.9%{opacity:0}
+45.4%{opacity:0} 45.6%{opacity:1} 48.6%{opacity:1} 49.1%{opacity:0}
+100%{opacity:0}
+}
+.ci-diary-sketch #cursor { opacity: 0; animation: cursor-move 24s linear infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+@keyframes cursor-move {
+0%,28%{opacity:0; transform:translate(140px,-70px) scale(1)}
+28.6%{opacity:1; transform:translate(0,0) scale(1)}
+29.6%{opacity:1; transform:translate(0,0) scale(.8)}
+30%{opacity:1; transform:translate(0,0) scale(1)}
+30.6%{opacity:0; transform:translate(0,0) scale(1)}
+46.2%{opacity:0; transform:translate(140px,-70px) scale(1)}
+46.8%{opacity:1; transform:translate(0,0) scale(1)}
+47.8%{opacity:1; transform:translate(0,0) scale(.8)}
+48.2%{opacity:1; transform:translate(0,0) scale(1)}
+48.8%{opacity:0; transform:translate(0,0) scale(1)}
+100%{opacity:0}
+}
 
-  .ci-diary-sketch #shake-group { animation: shake 24s linear infinite; }
-  @keyframes shake {
-    0%,76.6%{ transform:translate(0,0) }
-    76.8%{ transform:translate(-6px,2px) } 77%{ transform:translate(7px,-3px) }
-    77.2%{ transform:translate(-5px,3px) } 77.4%{ transform:translate(4px,-2px) }
-    77.7%{ transform:translate(0,0) } 100%{ transform:translate(0,0) }
-  }
-  .ci-diary-sketch #bat-arm { transform-origin: 283px 224px; animation: bat-swing 24s linear infinite; }
-  @keyframes bat-swing {
-    0%,69.3%{ transform:rotate(0deg) } 71%{ transform:rotate(-58deg) } 75%{ transform:rotate(-58deg) }
-    76.9%{ transform:rotate(38deg) } 78%{ transform:rotate(20deg) } 80.5%{ transform:rotate(20deg) }
-    81.4%{ transform:rotate(0deg) } 100%{ transform:rotate(0deg) }
-  }
-  .ci-diary-sketch #impact { opacity: 0; animation: impact 24s linear infinite; }
-  @keyframes impact { 0%,76.7%{opacity:0} 77%{opacity:1} 77.6%{opacity:1} 78.3%{opacity:0} 100%{opacity:0} }
-  .ci-diary-sketch #crack { opacity: 0; animation: crack 24s linear infinite; }
-  @keyframes crack { 0%,76.9%{opacity:0} 77.1%{opacity:1} 81.4%{opacity:1} 81.6%{opacity:0} 100%{opacity:0} }
+.ci-diary-sketch #shake-group { animation: shake 24s linear infinite; }
+@keyframes shake {
+0%,76.6%{ transform:translate(0,0) }
+76.8%{ transform:translate(-6px,2px) } 77%{ transform:translate(7px,-3px) }
+77.2%{ transform:translate(-5px,3px) } 77.4%{ transform:translate(4px,-2px) }
+77.7%{ transform:translate(0,0) } 100%{ transform:translate(0,0) }
+}
+.ci-diary-sketch #bat-arm { transform-origin: 283px 224px; animation: bat-swing 24s linear infinite; }
+@keyframes bat-swing {
+0%,69.3%{ transform:rotate(0deg) } 71%{ transform:rotate(-58deg) } 75%{ transform:rotate(-58deg) }
+76.9%{ transform:rotate(38deg) } 78%{ transform:rotate(20deg) } 80.5%{ transform:rotate(20deg) }
+81.4%{ transform:rotate(0deg) } 100%{ transform:rotate(0deg) }
+}
+.ci-diary-sketch #impact { opacity: 0; animation: impact 24s linear infinite; }
+@keyframes impact { 0%,76.7%{opacity:0} 77%{opacity:1} 77.6%{opacity:1} 78.3%{opacity:0} 100%{opacity:0} }
+.ci-diary-sketch #crack { opacity: 0; animation: crack 24s linear infinite; }
+@keyframes crack { 0%,76.9%{opacity:0} 77.1%{opacity:1} 81.4%{opacity:1} 81.6%{opacity:0} 100%{opacity:0} }
 
-  .ci-diary-sketch #sign-inner { transform-box: fill-box; transform-origin: 50% 50%; animation: sign-pop 24s linear infinite; }
-  @keyframes sign-pop {
-    0%,82.1%{ transform:scale(.6) rotate(-3deg) } 82.6%{ transform:scale(1.06) rotate(-3deg) }
-    83%{ transform:scale(1) rotate(-3deg) } 94%{ transform:scale(1) rotate(-3deg) } 100%{ transform:scale(.6) rotate(-3deg) }
-  }
+.ci-diary-sketch #sign-inner { transform-box: fill-box; transform-origin: 50% 50%; animation: sign-pop 24s linear infinite; }
+@keyframes sign-pop {
+0%,82.1%{ transform:scale(.6) rotate(-3deg) } 82.6%{ transform:scale(1.06) rotate(-3deg) }
+83%{ transform:scale(1) rotate(-3deg) } 94%{ transform:scale(1) rotate(-3deg) } 100%{ transform:scale(.6) rotate(-3deg) }
+}
 </style>
 <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A rough sketch of a stick figure typing happily, watching a CI build fail at 75%, 60%, then 99% across three retries, smashing the computer with a bat, and holding up a sign that says tests getting you down, before looping.">
-  <defs>
-    <filter id="sketch" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4"/>
-    </filter>
-    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="1.3" fill="#d7dee6"/>
-    </pattern>
-  </defs>
+<defs>
+<filter id="sketch" x="-30%" y="-30%" width="160%" height="160%">
+<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="noise"/>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="4"/>
+</filter>
+<pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+<circle cx="2" cy="2" r="1.3" fill="#d7dee6"/>
+</pattern>
+</defs>
 
   <rect width="800" height="500" fill="#f2f5f7"/>
   <rect width="800" height="500" fill="url(#dots)"/>
@@ -188,6 +188,7 @@ date: 2026-09-15
     <g class="type-bounce" id="hand-right">
       <path class="sketch" d="M322 256 L372 288" fill="none" stroke="#2b3440" stroke-width="3" stroke-linecap="round"/>
     </g>
+
   </g>
 
   <!-- ============ SCENE 2: CI zoom ============ -->
@@ -220,6 +221,7 @@ date: 2026-09-15
     <g id="cursor" class="sketch">
       <path d="M400 355 L400 384 L406 377 L412 388 L417 385 L411 375 L420 373 Z" fill="#2b3440" stroke="#2b3440" stroke-width="1"/>
     </g>
+
   </g>
 
   <!-- ============ SCENE 3: smash (side view) ============ -->
@@ -254,6 +256,7 @@ date: 2026-09-15
         <ellipse cx="400" cy="167" rx="11" ry="8" fill="#8a5a2b" stroke="#2b3440" stroke-width="2" transform="rotate(-27 400 167)"/>
       </g>
     </g>
+
   </g>
 
   <!-- ============ SCENE 4: sign ============ -->
@@ -269,7 +272,7 @@ date: 2026-09-15
 
   <rect class="flash" width="800" height="500"/>
 </svg>
-<figcaption>Same loop, sketch style: stick figure typing → thought bubble → CI fails at 75% → retry → fails at 60% → retry → fails at 99% → out comes the bat → "tests getting you down?" → back to typing.</figcaption>
+<figcaption>CI Fail</figcaption>
 </figure>
 
 I'm not always the best at leaving well enough alone. For years our test suite cleaned up after itself with all the elegance of a toddler tidying a bedroom by sweeping everything under the rug: when needed, we called `clearDatabase()` and truncated every table. Simple. Confident. Wrong, not in the dramatic "everything's on fire" sense, but a slow death by a thousand cuts — one that had apparently crept up to failing around 50% of test runs by the time I found out, which someone mentioned to me only once I was already elbow-deep in replacing it.
@@ -278,7 +281,7 @@ I'm not always the best at leaving well enough alone. For years our test suite c
 
 `clearDatabase()` had been there so long it had achieved a sort of tenure — untouchable, load-bearing, the kind of code nobody wants to be the one who breaks. Previous attempts had pruned the easy wins, but the mountain still loomed. It "worked," in the sense that the tests mostly ran and mostly went green, which is a very low bar we had somehow decided was good enough. As the suite grew into the thousands of tests, two things kept nagging at me, each more embarrassing than the last:
 
-- **It didn't actually guarantee isolation — it just *looked* like it did.** `clearDatabase()` only ran *when called*, which is a generous way of saying it ran whenever someone remembered to call it. Two tests in the same `describe` regularly depended on each other's leftovers, and in fact plenty of tests had come to depend on exactly that — meaning they couldn't be run in isolation without falling over, which rather defeats the point of calling it "isolation" in the first place.
+- **It didn't actually guarantee isolation — it just _looked_ like it did.** `clearDatabase()` only ran _when called_, which is a generous way of saying it ran whenever someone remembered to call it. Two tests in the same `describe` regularly depended on each other's leftovers, and in fact plenty of tests had come to depend on exactly that — meaning they couldn't be run in isolation without falling over, which rather defeats the point of calling it "isolation" in the first place.
 - **And that's exactly what caused the flakiness.** Because isolation only ever existed on paper, whether a test passed depended on what had run before it, in what order, and under what conditions — which is a fancy way of saying it was basically luck. Locally, with everyone running a handful of files at a time, that luck mostly held. Under CI, with the full suite running in whatever order and however much parallelism it decided to use that day, the luck ran out — and because nothing about this was subtle, a single test's hidden dependency on another test's leftovers would cheerfully cascade into a dozen unrelated failures, none of which had anything to do with the code actually being tested.
 
 That last one is the kind of bug that quietly kills trust in your own test suite. A red build that's "probably nothing, just re-run it" is worse than no test suite at all — at least an empty suite doesn't lie to you. Eventually nobody looks at red builds anymore, and at that point you don't have a safety net, you have a very expensive gut feeling.
@@ -289,7 +292,7 @@ This didn't start as "let's rewrite how the test suite cleans up." It started as
 
 It didn't fit us. The library assumes a fairly clean hook structure — transaction opens, test runs, transaction rolls back — and our suite doesn't play by those rules. We have describe blocks with real database writes happening in `before()`, not just `beforeEach()`, which a purely per-test wrapper would either miss entirely or roll back at the wrong time. And in more places than I'd like to admit, tests were quietly relying on state a previous test had left behind — which a library built around strict per-test isolation would break in ways that looked like the library's fault, not ours.
 
-So more of this was failure than success at first: the off-the-shelf fix didn't fit our shape of problem, and untangling *why* it didn't fit taught us more about the suite's hidden assumptions than the fix itself ever did. What we ended up building — `transactionPerTest()` and `transactionPerDescribe()` — is the same core idea as that library, just built to cope with our `before()`-heavy, occasionally state-sharing suite instead of assuming a cleaner one.
+So more of this was failure than success at first: the off-the-shelf fix didn't fit our shape of problem, and untangling _why_ it didn't fit taught us more about the suite's hidden assumptions than the fix itself ever did. What we ended up building — `transactionPerTest()` and `transactionPerDescribe()` — is the same core idea as that library, just built to cope with our `before()`-heavy, occasionally state-sharing suite instead of assuming a cleaner one.
 
 `transactionPerTest()` now wraps every `it()` globally via `beforeEach`/`afterEach`. In the common case, you don't call anything yourself — you just write a normal, independent test, and the rollback happens for free underneath you.
 
@@ -299,22 +302,22 @@ That sentence undersells how much work it took to get there. But — as with mos
 
 This one cost us a real, silently-leaking row before we understood it.
 
-`transactionPerTest()` opens and rolls back its transaction from `beforeEach`/`afterEach`, which Mocha runs *per test*. A describe-level `before()` runs once, and — crucially — runs before the first `beforeEach` of that suite fires. Which means: if a `before()` writes to the database directly, and nothing further up the chain has already opened a transaction, that write goes straight to the real connection. There's no transaction for `afterEach` to roll back, so the row just... stays. Forever, or until someone notices.
+`transactionPerTest()` opens and rolls back its transaction from `beforeEach`/`afterEach`, which Mocha runs _per test_. A describe-level `before()` runs once, and — crucially — runs before the first `beforeEach` of that suite fires. Which means: if a `before()` writes to the database directly, and nothing further up the chain has already opened a transaction, that write goes straight to the real connection. There's no transaction for `afterEach` to roll back, so the row just... stays. Forever, or until someone notices.
 
 ```ts
 // ❌ Leaks a real, permanent row — before() runs before any
 // per-test transaction exists, so this insert is never rolled back.
-describe('LpaCase#willsuiteStatus', () => {
-  let lpaCase: LpaCase
+describe("LpaCase#willsuiteStatus", () => {
+  let lpaCase: LpaCase;
 
   before(async () => {
-    lpaCase = await lpaCaseFactory({ status: 'in_progress' })
-  })
+    lpaCase = await lpaCaseFactory({ status: "in_progress" });
+  });
 
-  it('returns the mapped status for in_progress', () => {
-    expect(lpaCase.willsuiteStatus).to.equal('IN_PROGRESS')
-  })
-})
+  it("returns the mapped status for in_progress", () => {
+    expect(lpaCase.willsuiteStatus).to.equal("IN_PROGRESS");
+  });
+});
 ```
 
 The fix is `transactionPerDescribe()`, called as the first line of the block, so its own `before()` opens a transaction before the fixture-creating `before()` gets a chance to run (Mocha runs `before()` hooks outside-in, so this ordering is guaranteed):
@@ -322,49 +325,49 @@ The fix is `transactionPerDescribe()`, called as the first line of the block, so
 ```ts
 // ✅ transactionPerDescribe()'s before() runs first, so the fixture
 // is created inside a transaction and rolled back once the describe finishes.
-describe('LpaCase#willsuiteStatus', () => {
-  transactionPerDescribe()
+describe("LpaCase#willsuiteStatus", () => {
+  transactionPerDescribe();
 
-  let lpaCase: LpaCase
+  let lpaCase: LpaCase;
 
   before(async () => {
-    lpaCase = await lpaCaseFactory({ status: 'in_progress' })
-  })
+    lpaCase = await lpaCaseFactory({ status: "in_progress" });
+  });
 
-  it('returns the mapped status for in_progress', () => {
-    expect(lpaCase.willsuiteStatus).to.equal('IN_PROGRESS')
-  })
-})
+  it("returns the mapped status for in_progress", () => {
+    expect(lpaCase.willsuiteStatus).to.equal("IN_PROGRESS");
+  });
+});
 ```
 
-By default this doesn't remove per-test isolation, either — the global per-test wrapping just becomes a nested savepoint on top of the describe's transaction, so individual tests still can't leak into each other. It only changes where the *shared* fixture setup lives. There's an opt-in flag, `skipIndividualTransaction`, that removes that per-test nesting entirely and lets tests deliberately share state — but that reintroduces exactly the ordering-dependent fragility we were trying to get rid of, so it's a deliberate, rare choice, not a default.
+By default this doesn't remove per-test isolation, either — the global per-test wrapping just becomes a nested savepoint on top of the describe's transaction, so individual tests still can't leak into each other. It only changes where the _shared_ fixture setup lives. There's an opt-in flag, `skipIndividualTransaction`, that removes that per-test nesting entirely and lets tests deliberately share state — but that reintroduces exactly the ordering-dependent fragility we were trying to get rid of, so it's a deliberate, rare choice, not a default.
 
 We didn't just write this down and hope people remembered — a `before()` leaking a real row was exactly the kind of thing everyone agrees is bad and then does anyway six months later, so there's now a custom ESLint rule (`require-transaction-wrapper-for-before`) that flags any describe-level `before()` without `transactionPerDescribe()` or `skipTransactionWrapping()` somewhere in its own or an ancestor describe. A `before()` that never touches the database can opt out with a plain disable comment — but by default, the lint rule assumes guilty until proven innocent.
 
 ## Edge case two: when a test needs a real, aborted transaction
 
-Postgres aborts an *entire* transaction on any query error — not just the failing query. Every later query on that connection fails with "current transaction is aborted" until something rolls back, in full or to a savepoint. A `try`/`catch` around the failing query doesn't save you from this on its own.
+Postgres aborts an _entire_ transaction on any query error — not just the failing query. Every later query on that connection fails with "current transaction is aborted" until something rolls back, in full or to a savepoint. A `try`/`catch` around the failing query doesn't save you from this on its own.
 
 That's a real problem once every test is already running inside an ambient transaction: a test that deliberately triggers and recovers from a DB-level error (say, a unique constraint violation) can take down every query that runs afterwards in that test, or worse, in a later one on the same connection.
 
-The fix, `runInSavepoint()`, runs the risky call inside its own nested savepoint on top of whatever transaction is already active, and only rolls back *that*, leaving the ambient transaction healthy:
+The fix, `runInSavepoint()`, runs the risky call inside its own nested savepoint on top of whatever transaction is already active, and only rolls back _that_, leaving the ambient transaction healthy:
 
 ```ts
 try {
   await runInSavepoint(() =>
-    Country.query().insert({ id: duplicateId, name: 'Second', code: 'ZZ-D2' })
-  )
+    Country.query().insert({ id: duplicateId, name: "Second", code: "ZZ-D2" }),
+  );
 } catch (error) {
   // the savepoint was rolled back, not the ambient (per-test) transaction —
   // so this query still works instead of failing with
   // "current transaction is aborted"
-  expect(await Country.query().findOne({ code: 'ZZ-D1' })).to.exist
+  expect(await Country.query().findOne({ code: "ZZ-D1" })).to.exist;
 }
 ```
 
 It's not just a testing trick, either — it's the same pattern our production code already uses to catch a constraint violation mid-request without taking the whole request down.
 
-For the handful of cases where none of this is enough — tests that need real, independent transactions racing each other (proving row locking works, for instance) — there's `skipTransactionWrapping(reason)`, which opts a block out entirely and falls back to a `clearDatabase()` safety net once it finishes. It's the escape hatch, not the default, and it comes with a mandatory `reason` so nobody has to reverse-engineer *why* a block needed it six months later.
+For the handful of cases where none of this is enough — tests that need real, independent transactions racing each other (proving row locking works, for instance) — there's `skipTransactionWrapping(reason)`, which opts a block out entirely and falls back to a `clearDatabase()` safety net once it finishes. It's the escape hatch, not the default, and it comes with a mandatory `reason` so nobody has to reverse-engineer _why_ a block needed it six months later.
 
 ## Edge case three: everything happens at the same instant
 

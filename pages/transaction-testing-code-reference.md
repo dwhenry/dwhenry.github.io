@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Code reference: transaction-based test isolation"
-subtitle: "The full source behind \"A broken test suite, a tree and finding a rabbit\""
+subtitle: 'The full source behind "A broken test suite, a tree and finding a rabbit"'
 permalink: /2026/09/15/a-broken-test-suite-a-tree-and-finding-a-rabbit/code-reference/
 date: 2026-09-15
 ---
@@ -37,34 +37,19 @@ function isSkipped(): boolean {
  * describes keep the default wrapping.
  *
  * Needed for blocks that:
- * - deliberately trigger and then recover from a DB-level error (Postgres
- *   aborts the whole transaction on any query error, breaking any later
- *   query in the same test, related or not)
- * - rely on a fire-and-forget (un-awaited) async DB write outliving the test
- * - chain state across sequential it()s (each it() depends on a mutation
- *   the previous it() made, rather than being independent)
- * - use emptyAllTables() directly, or otherwise test real commit/rollback
- *   behaviour themselves
+ * - test using real commit/rollback
+ *   behaviour themselves or that rely on an empty database state to run.
  */
 export function skipTransactionWrapping(reason: string): void {
-  // Tracks whether an ancestor transactionPerDescribe() is already active
-  // when this block starts — if so, its own rollback will already clean up
-  // everything this block writes, and calling clearDatabase() here would
-  // deadlock: TRUNCATE needs an exclusive lock that can't be granted while
-  // the still-open ancestor transaction holds any lock on the same tables.
-  let hadActiveAncestorTransaction = false
-
   before(function () {
-    hadActiveAncestorTransaction = BaseModel.knex() !== database
+    if (BaseModel.knex() !== database) throw new Error('do not nest skipTransactionWrapping inside a transactionPerDescribe`)
     skipDepth++
     console.log(`[transaction-wrapper] skipping — ${reason}`)
   })
 
   after(async function () {
     skipDepth--
-    if (!hadActiveAncestorTransaction) {
-      await clearDatabase()
-    }
+    await clearDatabase()
   })
 }
 
@@ -157,9 +142,9 @@ export function transactionPerDescribe({
 ## `runInSavepoint()`
 
 ```ts
-import { transaction, type Transaction } from 'objection'
+import { transaction, type Transaction } from "objection";
 
-import { BaseModel } from 'shared/models/base-model'
+import { BaseModel } from "shared/models/base-model";
 
 /**
  * Runs `fn` inside its own savepoint — a nested transaction if `trx` (or the
@@ -175,17 +160,17 @@ import { BaseModel } from 'shared/models/base-model'
  */
 export async function runInSavepoint<T>(
   fn: (trx: Transaction) => Promise<T>,
-  trx?: Transaction
+  trx?: Transaction,
 ): Promise<T> {
-  const savepoint = await transaction.start(trx ?? BaseModel)
+  const savepoint = await transaction.start(trx ?? BaseModel);
 
   try {
-    const result = await fn(savepoint)
-    await savepoint.commit()
-    return result
+    const result = await fn(savepoint);
+    await savepoint.commit();
+    return result;
   } catch (error) {
-    await savepoint.rollback()
-    throw error
+    await savepoint.rollback();
+    throw error;
   }
 }
 ```
@@ -202,18 +187,18 @@ export async function runInSavepoint<T>(
  * "most recently created". Use this as a factory's default createdAt
  * (still overridable by an explicit value) wherever call order matters.
  */
-let lastMs = 0
+let lastMs = 0;
 
 export const nextCreatedAt = (): Date => {
-  lastMs = Math.max(Date.now(), lastMs + 1)
-  return new Date(lastMs)
-}
+  lastMs = Math.max(Date.now(), lastMs + 1);
+  return new Date(lastMs);
+};
 ```
 
 ## ESLint rule: `require-transaction-wrapper-for-before`
 
 ```js
-'use strict'
+"use strict";
 
 // A describe()-level before() hook runs before mocha's per-test transaction
 // starts (transactionPerTest() only wraps beforeEach/it/afterEach), so
@@ -248,64 +233,67 @@ export const nextCreatedAt = (): Date => {
 //     /* eslint-enable require-transaction-wrapper-for-before */
 //   })
 
-const WRAPPER_CALLS = new Set(['transactionPerDescribe', 'skipTransactionWrapping'])
+const WRAPPER_CALLS = new Set([
+  "transactionPerDescribe",
+  "skipTransactionWrapping",
+]);
 
 const isDescribeCall = (node) => {
-  if (!node || node.type !== 'CallExpression') return false
-  const callee = node.callee
-  if (callee.type === 'Identifier' && callee.name === 'describe') return true
+  if (!node || node.type !== "CallExpression") return false;
+  const callee = node.callee;
+  if (callee.type === "Identifier" && callee.name === "describe") return true;
   return (
-    callee.type === 'MemberExpression' &&
-    callee.object.type === 'Identifier' &&
-    callee.object.name === 'describe'
-  )
-}
+    callee.type === "MemberExpression" &&
+    callee.object.type === "Identifier" &&
+    callee.object.name === "describe"
+  );
+};
 
 const getDescribeBodyStatements = (describeCallNode) => {
-  const args = describeCallNode.arguments
-  const fn = args[args.length - 1]
+  const args = describeCallNode.arguments;
+  const fn = args[args.length - 1];
   if (
     !fn ||
-    (fn.type !== 'ArrowFunctionExpression' && fn.type !== 'FunctionExpression')
+    (fn.type !== "ArrowFunctionExpression" && fn.type !== "FunctionExpression")
   ) {
-    return null
+    return null;
   }
-  if (fn.body.type !== 'BlockStatement') return null
-  return fn.body.body
-}
+  if (fn.body.type !== "BlockStatement") return null;
+  return fn.body.body;
+};
 
 const isWrapperCallStatement = (statement) => {
-  if (statement.type !== 'ExpressionStatement') return false
-  const expr = statement.expression
+  if (statement.type !== "ExpressionStatement") return false;
+  const expr = statement.expression;
   return (
-    expr.type === 'CallExpression' &&
-    expr.callee.type === 'Identifier' &&
+    expr.type === "CallExpression" &&
+    expr.callee.type === "Identifier" &&
     WRAPPER_CALLS.has(expr.callee.name)
-  )
-}
+  );
+};
 
 const findWrapperStatementIndex = (statements) =>
-  statements.findIndex(isWrapperCallStatement)
+  statements.findIndex(isWrapperCallStatement);
 
 // Finds the index, within `statements`, of whichever statement contains
 // `node` — i.e. the top-level statement in this describe() body that the
 // before() call is (part of).
 const findContainingStatementIndex = (statements, node) => {
-  let current = node
+  let current = node;
   while (current) {
-    const index = statements.indexOf(current)
-    if (index !== -1) return index
-    current = current.parent
+    const index = statements.indexOf(current);
+    if (index !== -1) return index;
+    current = current.parent;
   }
-  return -1
-}
+  return -1;
+};
 
 module.exports = {
   meta: {
-    type: 'problem',
+    type: "problem",
     docs: {
       description:
-        'require transactionPerDescribe() or skipTransactionWrapping() alongside a describe-level before() hook, so its writes are rolled back instead of leaking onto the real database',
+        "require transactionPerDescribe() or skipTransactionWrapping() alongside a describe-level before() hook, so its writes are rolled back instead of leaking onto the real database",
     },
     schema: [],
     messages: {
@@ -316,12 +304,14 @@ module.exports = {
   create(context) {
     return {
       CallExpression(node) {
-        if (!(node.callee.type === 'Identifier' && node.callee.name === 'before')) {
-          return
+        if (
+          !(node.callee.type === "Identifier" && node.callee.name === "before")
+        ) {
+          return;
         }
 
-        let current = node.parent
-        let foundDescribe = false
+        let current = node.parent;
+        let foundDescribe = false;
         // Only the nearest enclosing describe() needs its wrapper call to
         // come *before* this before() in registration order — mocha runs
         // sibling hooks within one describe in the order they're
@@ -330,36 +320,36 @@ module.exports = {
         // where in its own body the wrapper appears, since mocha always
         // finishes every one of a parent's own hooks before it starts
         // running hooks in a child describe.
-        let requireOrderingHere = true
+        let requireOrderingHere = true;
         while (current) {
           if (isDescribeCall(current)) {
-            foundDescribe = true
-            const statements = getDescribeBodyStatements(current)
+            foundDescribe = true;
+            const statements = getDescribeBodyStatements(current);
             if (statements) {
-              const wrapperIndex = findWrapperStatementIndex(statements)
+              const wrapperIndex = findWrapperStatementIndex(statements);
               if (wrapperIndex !== -1) {
                 if (!requireOrderingHere) {
-                  return
+                  return;
                 }
                 const beforeIndex = findContainingStatementIndex(
                   statements,
-                  node
-                )
+                  node,
+                );
                 if (beforeIndex !== -1 && wrapperIndex < beforeIndex) {
-                  return
+                  return;
                 }
               }
             }
-            requireOrderingHere = false
+            requireOrderingHere = false;
           }
-          current = current.parent
+          current = current.parent;
         }
 
         if (foundDescribe) {
-          context.report({ node, messageId: 'missingWrapper' })
+          context.report({ node, messageId: "missingWrapper" });
         }
       },
-    }
+    };
   },
-}
+};
 ```
