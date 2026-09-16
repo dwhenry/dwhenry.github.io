@@ -11,16 +11,16 @@ This is the complete source for everything referenced in [A background job hidin
 ## `attachToExecutionPromise()` and its test helpers
 
 ```ts
-import { type Transaction } from 'objection'
+import { type Transaction } from "objection";
 
-import { ENV } from 'env'
+import { ENV } from "env";
 
 interface CapturedExecutionPromiseCallback {
   /** What the callback does, e.g. 'invoice-enqueue' — lets a test
    * pick out the one it cares about via getCapturedExecutionPromiseCallback()
    * when more than one code path attaches a callback in the same test. */
-  description: string
-  fn: () => Promise<void>
+  description: string;
+  fn: () => Promise<void>;
 }
 
 /**
@@ -28,21 +28,21 @@ interface CapturedExecutionPromiseCallback {
  * running under test. See attachToExecutionPromise() and
  * docs/executionPromise.md.
  */
-let capturedCallbacks: CapturedExecutionPromiseCallback[] = []
+let capturedCallbacks: CapturedExecutionPromiseCallback[] = [];
 
 /** Clears whatever callbacks have been captured so far. Called automatically
  * before every test (see transactionPerTest() in transaction-wrapper.ts) —
  * call directly only if you need a clean slate mid-test. */
 export const resetCapturedExecutionPromiseCallbacks = (): void => {
-  capturedCallbacks = []
-}
+  capturedCallbacks = [];
+};
 
 /** Returns every callback captured so far, along with the description it was
  * attached with, in the order they were attached. Most tests are better
  * served by getCapturedExecutionPromiseCallback(), which finds one by
  * description. */
 export const getCapturedExecutionPromiseCallbacks =
-  (): CapturedExecutionPromiseCallback[] => capturedCallbacks
+  (): CapturedExecutionPromiseCallback[] => capturedCallbacks;
 
 /**
  * Returns the single callback captured under `description`. Throws if none
@@ -50,25 +50,25 @@ export const getCapturedExecutionPromiseCallbacks =
  * clearly instead of silently running the wrong callback.
  */
 export const getCapturedExecutionPromiseCallback = (
-  description: string
+  description: string,
 ): (() => Promise<void>) => {
   const matches = capturedCallbacks.filter(
-    (callback) => callback.description === description
-  )
+    (callback) => callback.description === description,
+  );
 
   if (matches.length !== 1) {
     throw new Error(
       `Expected exactly one callback captured with description "${description}", found ${
         matches.length
       }. Captured descriptions: ${
-        capturedCallbacks.map((callback) => callback.description).join(', ') ||
-        '(none)'
-      }`
-    )
+        capturedCallbacks.map((callback) => callback.description).join(", ") ||
+        "(none)"
+      }`,
+    );
   }
 
-  return matches[0].fn
-}
+  return matches[0].fn;
+};
 
 /**
  * Runs every callback captured so far and clears them, so a later flush
@@ -76,11 +76,12 @@ export const getCapturedExecutionPromiseCallback = (
  * than one deferred write over its lifetime (e.g. two separate requests),
  * where each needs to run before moving on to the next step.
  */
-export const flushCapturedExecutionPromiseCallbacks = async (): Promise<void> => {
-  const callbacks = capturedCallbacks
-  capturedCallbacks = []
-  await Promise.all(callbacks.map((callback) => callback.fn()))
-}
+export const flushCapturedExecutionPromiseCallbacks =
+  async (): Promise<void> => {
+    const callbacks = capturedCallbacks;
+    capturedCallbacks = [];
+    await Promise.all(callbacks.map((callback) => callback.fn()));
+  };
 
 /**
  * Attaches `fn` to run once `trx` settles (commits or rolls back), without
@@ -100,43 +101,25 @@ export const flushCapturedExecutionPromiseCallbacks = async (): Promise<void> =>
 export const attachToExecutionPromise = (
   trx: Transaction,
   description: string,
-  fn: () => Promise<void>
+  fn: () => Promise<void>,
 ): void => {
-  if (ENV.NODE_ENV === 'test') {
-    capturedCallbacks.push({ description, fn })
-    return
+  if (ENV.NODE_ENV === "test") {
+    capturedCallbacks.push({ description, fn });
+    return;
   }
 
-  trx.executionPromise.then(fn)
-}
+  trx.executionPromise.then(fn);
+};
 ```
 
-## Wired into `transactionPerTest()`
+## Wired into the test suite
 
-Just two lines added to the existing per-test transaction wrapper — every test starts with a clean captured-callback slate, regardless of transaction wrapping mode:
+A simple global beforeEach and every test starts with a clean captured-callback slate:
 
 ```ts
-export function transactionPerTest(): void {
-  let previousKnex: TransactionOrKnex
-  let trx: Transaction
-
-  beforeEach(async function () {
-    resetCapturedExecutionPromiseCallbacks()
-    if (isSkipped()) return
-    previousKnex = BaseModel.knex()
-    trx = await transaction.start(BaseModel)
-    BaseModel.knex(trx)
-  })
-
-  afterEach(async function () {
-    if (isSkipped()) return
-    try {
-      await trx.rollback()
-    } finally {
-      BaseModel.knex(previousKnex ?? database)
-    }
-  })
-}
+beforeEach(async function () {
+  resetCapturedExecutionPromiseCallbacks();
+});
 ```
 
 ## The call site that surfaced the problem
@@ -146,54 +129,53 @@ export function transactionPerTest(): void {
 ```ts
 // server/src/services/lead-conversion/plan/index.ts
 if (attributes.brandId === BRAND_ID.acme) {
-  await enqueueInvoiceRequest({ plan, trx })
+  await enqueueInvoiceRequest({ plan, trx });
 }
 
 const enqueueInvoiceRequest = async ({ plan, trx }) => {
-  const invoices = await getInvoicesForPlan(plan)
+  const invoices = await getInvoicesForPlan(plan);
 
   if (invoices.length !== 1) {
-    throw new Error(`Expected exactly one invoice, found ${invoices.length}`)
+    throw new Error(`Expected exactly one invoice, found ${invoices.length}`);
   }
 
-  const invoice = invoices[0]
-  const { inboundWebhookRequestId } = invoice
+  const invoice = invoices[0];
+  const { inboundWebhookRequestId } = invoice;
 
-  if (!inboundWebhookRequestId && invoice.reference !== 'fake-payment') {
-    throw new Error('Expected invoice to have an inboundWebhookRequestId')
+  if (!inboundWebhookRequestId && invoice.reference !== "fake-payment") {
+    throw new Error("Expected invoice to have an inboundWebhookRequestId");
   }
 
   if (inboundWebhookRequestId) {
     // We need to wait for the transaction to commit before we can add the
     // item to the queue
-    attachToExecutionPromise(trx, 'invoice-enqueue', async () => {
+    attachToExecutionPromise(trx, "invoice-enqueue", async () => {
       await invoiceQueue.addItem({
-        type: 'create-invoice',
+        type: "create-invoice",
         inboundWebhookRequestId,
         planId: plan.id,
-      })
-    })
+      });
+    });
   }
-}
+};
 ```
 
 ## Running the captured callback in a test
 
 ```ts
 result = await Product.transaction(async (trx) => {
-  return await convertProduct({ lead, leadEvent, trx })
-})
+  return await convertProduct({ lead, leadEvent, trx });
+});
 
 // attachToExecutionPromise() only defers for real outside of tests —
 // under test it captures the callback instead of running it, so run it
 // directly to exercise what it would have done (see docs/executionPromise.md).
-await getCapturedExecutionPromiseCallback('invoice-enqueue')()
+await getCapturedExecutionPromiseCallback("invoice-enqueue")();
 ```
 
 Or, where a test triggers more than one deferred write and just wants all of them to have run before it makes its assertions:
 
 ```ts
-await processStripeEventCompleted()
-await testingQueue.executeAll({ only: [JOB_TYPES.STRIPE_JOB] })
-await flushCapturedExecutionPromiseCallbacks()
+await processStripeEventCompleted();
+await flushCapturedExecutionPromiseCallbacks();
 ```
