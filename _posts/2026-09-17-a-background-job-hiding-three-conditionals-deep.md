@@ -8,22 +8,22 @@ Some bugs announce themselves. This one didn't — it took months, a suite that 
 
 ## The problem: a job enqueue three conditionals deep
 
-Somewhere inside converting a lead into a funeral plan, there's a helper called `enqueueDiamondRequest`. You don't get to it directly — you get to it by going through `convertProduct`, which is itself dispatched to from a product-type switch one layer up, and even once you're inside it you still have to clear a legacy-plan early return, a brand check, an invoice-count guard, and a null check on a webhook request ID before the enqueue itself ever runs:
+Somewhere inside converting a lead into a subscription plan, there's a helper called `enqueueInvoiceRequest`. You don't get to it directly — you get to it by going through `convertProduct`, which is itself dispatched to from a product-type switch one layer up, and even once you're inside it you still have to clear a legacy-plan early return, a brand check, an invoice-count guard, and a null check on a webhook request ID before the enqueue itself ever runs:
 
 ```ts
-// server/src/services/lead-conversion/funeral-plan/index.ts
-if (attributes.brandId === BRAND_ID.simplicity) {
-  await enqueueDiamondRequest({ funeralPlan, trx })
+// server/src/services/lead-conversion/plan/index.ts
+if (attributes.brandId === BRAND_ID.acme) {
+  await enqueueInvoiceRequest({ plan, trx })
 }
 
-// ...inside enqueueDiamondRequest:
+// ...inside enqueueInvoiceRequest:
 if (inboundWebhookRequestId) {
   // We need to wait for the transaction to commit before we can add the item to the queue
-  attachToExecutionPromise(trx, 'diamond-invoice-enqueue', async () => {
-    await diamondQueue.addItem({
+  attachToExecutionPromise(trx, 'invoice-enqueue', async () => {
+    await invoiceQueue.addItem({
       type: 'create-invoice',
       inboundWebhookRequestId,
-      funeralPlanId: funeralPlan.id,
+      planId: plan.id,
     })
   })
 }
@@ -39,7 +39,7 @@ Objection's `Transaction` exposes `executionPromise`, which resolves once the tr
 trx.executionPromise.then(fn)
 ```
 
-That's the entire mechanism. No return value has to travel back up through `enqueueDiamondRequest` → `convertProduct` → the product-dispatch switch → whatever called that, just to tell the transaction's owner "also run this once you're done." Every intermediate function stays exactly as it is.
+That's the entire mechanism. No return value has to travel back up through `enqueueInvoiceRequest` → `convertProduct` → the product-dispatch switch → whatever called that, just to tell the transaction's owner "also run this once you're done." Every intermediate function stays exactly as it is.
 
 We did consider the alternatives, briefly:
 
@@ -73,7 +73,7 @@ export const attachToExecutionPromise = (
 }
 ```
 
-Under test, nothing fires unawaited and nothing can outlive the test that triggered it — the callback just sits in an array until something asks for it by name, or the next test's `beforeEach` clears it out. A test that cares can pull its own callback out with `getCapturedExecutionPromiseCallback('diamond-invoice-enqueue')` and run it deliberately, on its own schedule, same as it would call any other job handler directly.
+Under test, nothing fires unawaited and nothing can outlive the test that triggered it — the callback just sits in an array until something asks for it by name, or the next test's `beforeEach` clears it out. A test that cares can pull its own callback out with `getCapturedExecutionPromiseCallback('invoice-enqueue')` and run it deliberately, on its own schedule, same as it would call any other job handler directly.
 
 It wasn't a total, clean victory, though — worth saying, since that's the more honest version of this story. One integration test, after adopting this fix, still leaked a row into unrelated tests at full-suite scale, from somewhere in the same request flow that this fix didn't reach. It's still sitting behind `skipTransactionWrapping()` with `clearDatabase()` as its safety net, and a comment saying as much, rather than a triumphant "and then everything was fine." Sometimes the honest state of a fix is "this part's solved, that part's still open," and it's better to write that down than to pretend otherwise.
 

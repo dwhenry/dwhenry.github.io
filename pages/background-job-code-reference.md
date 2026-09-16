@@ -16,7 +16,7 @@ import { type Transaction } from 'objection'
 import { ENV } from 'env'
 
 interface CapturedExecutionPromiseCallback {
-  /** What the callback does, e.g. 'diamond-invoice-enqueue' — lets a test
+  /** What the callback does, e.g. 'invoice-enqueue' — lets a test
    * pick out the one it cares about via getCapturedExecutionPromiseCallback()
    * when more than one code path attaches a callback in the same test. */
   description: string
@@ -87,7 +87,7 @@ export const flushCapturedExecutionPromiseCallbacks = async (): Promise<void> =>
  * awaiting it — the standard way to defer work (e.g. enqueuing a job) until
  * the caller's transaction is guaranteed to have actually happened, rather
  * than running it as part of the transaction itself. `description` identifies
- * what the callback does (e.g. 'diamond-invoice-enqueue'), so a test can find
+ * what the callback does (e.g. 'invoice-enqueue'), so a test can find
  * and run the right one via getCapturedExecutionPromiseCallback().
  *
  * Under NODE_ENV=test, `fn` is captured (see
@@ -141,16 +141,16 @@ export function transactionPerTest(): void {
 
 ## The call site that surfaced the problem
 
-`enqueueDiamondRequest()`, buried behind a product-dispatch switch, a legacy-plan early return, a brand check, and an invoice-count guard before the deferred enqueue itself ever runs:
+`enqueueInvoiceRequest()`, buried behind a product-dispatch switch, a legacy-plan early return, a brand check, and an invoice-count guard before the deferred enqueue itself ever runs:
 
 ```ts
-// server/src/services/lead-conversion/funeral-plan/index.ts
-if (attributes.brandId === BRAND_ID.simplicity) {
-  await enqueueDiamondRequest({ funeralPlan, trx })
+// server/src/services/lead-conversion/plan/index.ts
+if (attributes.brandId === BRAND_ID.acme) {
+  await enqueueInvoiceRequest({ plan, trx })
 }
 
-const enqueueDiamondRequest = async ({ funeralPlan, trx }) => {
-  const invoices = await getInvoicesForFuneralPlan(funeralPlan)
+const enqueueInvoiceRequest = async ({ plan, trx }) => {
+  const invoices = await getInvoicesForPlan(plan)
 
   if (invoices.length !== 1) {
     throw new Error(`Expected exactly one invoice, found ${invoices.length}`)
@@ -166,11 +166,11 @@ const enqueueDiamondRequest = async ({ funeralPlan, trx }) => {
   if (inboundWebhookRequestId) {
     // We need to wait for the transaction to commit before we can add the
     // item to the queue
-    attachToExecutionPromise(trx, 'diamond-invoice-enqueue', async () => {
-      await diamondQueue.addItem({
+    attachToExecutionPromise(trx, 'invoice-enqueue', async () => {
+      await invoiceQueue.addItem({
         type: 'create-invoice',
         inboundWebhookRequestId,
-        funeralPlanId: funeralPlan.id,
+        planId: plan.id,
       })
     })
   }
@@ -187,7 +187,7 @@ result = await Product.transaction(async (trx) => {
 // attachToExecutionPromise() only defers for real outside of tests —
 // under test it captures the callback instead of running it, so run it
 // directly to exercise what it would have done (see docs/executionPromise.md).
-await getCapturedExecutionPromiseCallback('diamond-invoice-enqueue')()
+await getCapturedExecutionPromiseCallback('invoice-enqueue')()
 ```
 
 Or, where a test triggers more than one deferred write and just wants all of them to have run before it makes its assertions:
