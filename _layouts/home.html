@@ -6,7 +6,7 @@ layout: default
 {% endif %}
 
 <ul class="post-list">
-  {% for post in site.posts %}
+  {% for post in paginator.posts %}
   <li class="post-list-item">
     <a class="post-list-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
     <time class="post-list-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %B %Y" }}</time>
@@ -14,3 +14,21 @@ layout: default
   </li>
   {% endfor %}
 </ul>
+
+{% if paginator.total_pages > 1 %}
+<nav class="pagination" aria-label="Post pages">
+  {% if paginator.previous_page %}
+    <a class="pagination-prev" href="{{ paginator.previous_page_path | relative_url }}">&larr; Newer</a>
+  {% else %}
+    <span class="pagination-prev pagination-disabled">&larr; Newer</span>
+  {% endif %}
+
+  <span class="pagination-status">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+
+  {% if paginator.next_page %}
+    <a class="pagination-next" href="{{ paginator.next_page_path | relative_url }}">Older &rarr;</a>
+  {% else %}
+    <span class="pagination-next pagination-disabled">Older &rarr;</span>
+  {% endif %}
+</nav>
+{% endif %}

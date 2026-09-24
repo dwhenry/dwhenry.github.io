@@ -15,6 +15,28 @@ layout: default
   </div>
 </article>
 
+{% if page.previous or page.next %}
+<nav class="post-adjacent" aria-label="Adjacent posts">
+  {% if page.next %}
+    <a class="post-adjacent-link post-adjacent-next" href="{{ page.next.url | relative_url }}">
+      <span class="post-adjacent-label">&larr; Newer</span>
+      <span class="post-adjacent-title">{{ page.next.title }}</span>
+    </a>
+  {% else %}
+    <span class="post-adjacent-link post-adjacent-disabled"></span>
+  {% endif %}
+
+  {% if page.previous %}
+    <a class="post-adjacent-link post-adjacent-prev" href="{{ page.previous.url | relative_url }}">
+      <span class="post-adjacent-label">Older &rarr;</span>
+      <span class="post-adjacent-title">{{ page.previous.title }}</span>
+    </a>
+  {% else %}
+    <span class="post-adjacent-link post-adjacent-disabled"></span>
+  {% endif %}
+</nav>
+{% endif %}
+
 <p class="post-nav">
   <a href="{{ '/' | relative_url }}">&larr; All posts</a>
 </p>
