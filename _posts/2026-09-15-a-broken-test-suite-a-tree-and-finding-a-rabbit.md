@@ -2,6 +2,7 @@
 title: "A broken test suite, a tree and finding a rabbit"
 subtitle: "How we de-flaked our test suite by trusting a database feature that already existed"
 date: 2026-09-15
+structure: narrative-arc
 ---
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap">
@@ -275,55 +276,34 @@ date: 2026-09-15
 <figcaption>CI Fail</figcaption>
 </figure>
 
-I'm not always the best at leaving well enough alone. For years our test suite cleaned up after itself with all the elegance of a toddler tidying a bedroom by sweeping everything under the rug: when needed, we called `clearDatabase()` and truncated every table. Simple. Confident. Wrong, not in the dramatic "everything's on fire" sense, but a slow death by a thousand cuts — one that had apparently crept up to failing around 50% of test runs by the time I found out, which someone mentioned to me only once I was already elbow-deep in replacing it.
+I'm not always the best at leaving well enough alone. For years our test suite cleaned up after itself with all the elegance of a toddler tidying a bedroom by sweeping everything under the rug — it finally got to the point that it felt like it failed more than it passed (because it did - we had stats). Tests had always failed on occasion, but over the last 12 months it went from occasionally to most of the time, so one afternoon I thought I would have a look. I had 90 minutes left before I stopped.
+
+> **Background:** the backend here is TypeScript, talking to Postgres through [Objection.js](https://vincit.github.io/objection.js/) (a library that the original developer is no longer supporting), with [Mocha](https://mochajs.org/) running the tests. `clearDatabase()` was our test suite's cleanup step — a helper that, when called, truncated every table, and then reseeded the database so the next test would start from a known state. It wasn't automatic: something had to actually call it, usually in an `after()`/`afterEach()` hook. Our VP had made multiple attempts to remove this, reducing the number of times it was called in the test suite, but before this change we still had >200.
 
 ## The problem we'd been living with
 
-`clearDatabase()` had been there so long it had achieved a sort of tenure — untouchable, load-bearing, the kind of code nobody wants to be the one who breaks. Previous attempts had pruned the easy wins, but the mountain still loomed. It "worked," in the sense that the tests mostly ran and mostly went green, which is a very low bar we had somehow decided was good enough. As the suite grew into the thousands of tests, two things kept nagging at me, each more embarrassing than the last:
+`clearDatabase()` was there when I joined the company. Coming from Ruby and RSpec, it felt insane that transactions weren't standard, but this was the test suite and it was hard to change — the kind of code nobody wants to be the one who breaks. Previous attempts had pruned the easy wins, but the mountain still loomed. It "worked," in the sense that the tests mostly ran and mostly went green, which is a very low bar we had somehow decided was good enough. However, as we added features, the failure rate kept climbing without anyone really noticing, because it had always failed a bit.
 
-- **It didn't actually guarantee isolation — it just _looked_ like it did.** `clearDatabase()` only ran _when called_, which is a generous way of saying it ran whenever someone remembered to call it. Two tests in the same `describe` regularly depended on each other's leftovers, and in fact plenty of tests had come to depend on exactly that — meaning they couldn't be run in isolation without falling over, which rather defeats the point of calling it "isolation" in the first place.
-- **And that's exactly what caused the flakiness.** Because isolation only ever existed on paper, whether a test passed depended on what had run before it, in what order, and under what conditions — which is a fancy way of saying it was basically luck. Locally, with everyone running a handful of files at a time, that luck mostly held. Under CI, with the full suite running in whatever order and however much parallelism it decided to use that day, the luck ran out — and because nothing about this was subtle, a single test's hidden dependency on another test's leftovers would cheerfully cascade into a dozen unrelated failures, none of which had anything to do with the code actually being tested.
+What did this mean? We had tests that failed in isolation but passed in the full run. When you start writing a new test you might have the database filled with the past 100 inserts, or it might be newly reset — there was no way to tell. I was used to test isolation; `clearDatabase()` did not give that, since it only ran when called. Further to that, it appeared to be the cause of our test failures, and we had no clear reason why. Sure, some failures were obvious (e.g. counts that didn't match), but most were just random timeouts.
 
-That last one is the kind of bug that quietly kills trust in your own test suite. A red build that's "probably nothing, just re-run it" is worse than no test suite at all — at least an empty suite doesn't lie to you. Eventually nobody looks at red builds anymore, and at that point you don't have a safety net, you have a very expensive gut feeling.
+I never believed that the `clearDatabase()` call caused the timeout, but the timeouts happened when it was running. I took a sample of errors and asked Claude to investigate - it agreed, `clearDatabase()` was at the center of the problem. Knowing what I do know, I could likely have fixed the test failures and kept `clearDatabase()`.
+
+But a rabbit hole beckoned, and I still had 60 minutes left in the day, so down I went.
 
 ## Reaching for a feature that was already there
 
-This didn't start as "let's rewrite how the test suite cleans up." It started as a bug hunt — the cascade failures above needed a root cause, and the obvious first move was to see whether anyone else had already solved this. They had: Postgres transactions, rolled back instead of committed, are a well-known pattern for exactly this problem, and there's an existing library for it — [pg-transactional-tests](https://github.com/romeerez/pg-transactional-tests) — that wraps each test in a transaction against the `pg` package directly.
+I started looking at testing with Objection and how others solved this problem. I found [pg-transactional-tests](https://github.com/romeerez/pg-transactional-tests): Postgres transactions, rolled back instead of committed — the pattern I was used to, the pattern I already knew I liked.
 
-It didn't fit us. The library assumes a fairly clean hook structure — transaction opens, test runs, transaction rolls back — and our suite doesn't play by those rules. We have describe blocks with real database writes happening in `before()`, not just `beforeEach()`, which a purely per-test wrapper would either miss entirely or roll back at the wrong time. And in more places than I'd like to admit, tests were quietly relying on state a previous test had left behind — which a library built around strict per-test isolation would break in ways that looked like the library's fault, not ours.
+It didn't fit us. The library assumes a clean hook structure, `describe` blocks using `beforeEach` and `it`, but we had `before` blocks and shared state between tests. But the core concept could work — I saw the beginning of a solution: implement testing isolation by default with the library's code, then layer that with conditionals to escape transactions when needed. It wouldn't be pretty, but it was an improvement.
 
-So more of this was failure than success at first: the off-the-shelf fix didn't fit our shape of problem, and untangling _why_ it didn't fit taught us more about the suite's hidden assumptions than the fix itself ever did. What we ended up building — `transactionPerTest()` and `transactionPerDescribe()` — is the same core idea as that library, just built to cope with our `before()`-heavy, occasionally state-sharing suite instead of assuming a cleaner one.
+I started with `transactionPerTest()` — it wraps every `it()` globally via `beforeEach`/`afterEach` (same as the library). In the common case, you don't call anything yourself — you just write a normal, independent test, and the rollback happens for free underneath you.
 
-`transactionPerTest()` now wraps every `it()` globally via `beforeEach`/`afterEach`. In the common case, you don't call anything yourself — you just write a normal, independent test, and the rollback happens for free underneath you.
+## `before()` runs before `beforeEach`, so it's outside the transaction
 
-That sentence undersells how much work it took to get there. But — as with most "just use the database properly" fixes — the real story is in the edge cases it surfaced once it was actually running against our suite.
-
-## Edge case one: a `before()` that runs before any transaction exists
-
-This one cost us a real, silently-leaking row before we understood it.
-
-`transactionPerTest()` opens and rolls back its transaction from `beforeEach`/`afterEach`, which Mocha runs _per test_. A describe-level `before()` runs once, and — crucially — runs before the first `beforeEach` of that suite fires. Which means: if a `before()` writes to the database directly, and nothing further up the chain has already opened a transaction, that write goes straight to the real connection. There's no transaction for `afterEach` to roll back, so the row just... stays. Forever, or until someone notices.
+For this I added `transactionPerDescribe()` — this could be added to test files to create a transaction around a `before` block (which executed before any `beforeEach` blocks). Objection.js allows nested transactions, and that's what this provided. It wasn't pretty, but it moved me towards my goal: stopping rows being committed to the database.
 
 ```ts
-// ❌ Leaks a real, permanent row — before() runs before any
-// per-test transaction exists, so this insert is never rolled back.
-describe("LpaCase#willsuiteStatus", () => {
-  let lpaCase: LpaCase;
-
-  before(async () => {
-    lpaCase = await lpaCaseFactory({ status: "in_progress" });
-  });
-
-  it("returns the mapped status for in_progress", () => {
-    expect(lpaCase.willsuiteStatus).to.equal("IN_PROGRESS");
-  });
-});
-```
-
-The fix is `transactionPerDescribe()`, called as the first line of the block, so its own `before()` opens a transaction before the fixture-creating `before()` gets a chance to run (Mocha runs `before()` hooks outside-in, so this ordering is guaranteed):
-
-```ts
-// ✅ transactionPerDescribe()'s before() runs first, so the fixture
+// transactionPerDescribe()'s before() runs first, so the fixture
 // is created inside a transaction and rolled back once the describe finishes.
 describe("LpaCase#willsuiteStatus", () => {
   transactionPerDescribe();
@@ -340,17 +320,17 @@ describe("LpaCase#willsuiteStatus", () => {
 });
 ```
 
-By default this doesn't remove per-test isolation, either — the global per-test wrapping just becomes a nested savepoint on top of the describe's transaction, so individual tests still can't leak into each other. It only changes where the _shared_ fixture setup lives. There's an opt-in flag, `skipIndividualTransaction`, that removes that per-test nesting entirely and lets tests deliberately share state — but that reintroduces exactly the ordering-dependent fragility we were trying to get rid of, so it's a deliberate, rare choice, not a default.
+By default this doesn't remove per-test isolation, either — the global per-test wrapping just adds a nested savepoint, which stops tests leaking into each other. But lots of our describe blocks actually depended on test leakage, and rewriting the test suite was not something I could do. So I added an opt-in flag, `skipIndividualTransaction`, to `transactionPerDescribe`, that stopped the per-test nested transaction. It still isolated the before block, but tests inside it could now share DB state, allowing the wider improvement without needing a major rewrite.
 
-We didn't just write this down and hope people remembered — a `before()` leaking a real row was exactly the kind of thing everyone agrees is bad and then does anyway six months later, so there's now a custom ESLint rule (`require-transaction-wrapper-for-before`) that flags any describe-level `before()` without `transactionPerDescribe()` or `skipTransactionWrapping()` somewhere in its own or an ancestor describe. A `before()` that never touches the database can opt out with a plain disable comment — but by default, the lint rule assumes guilty until proven innocent.
+But leaking state was an issue, and having everyone remember to do this was a risk, so there's now a custom ESLint rule (`require-transaction-wrapper-for-before`) that flags any describe-level `before()` without `transactionPerDescribe()` or `skipTransactionWrapping()` somewhere in its own or an ancestor describe. A `before()` that never touches the database can opt out with a plain disable comment — but by default, the lint rule assumes guilty until proven innocent.
 
-## Edge case two: when a test needs a real, aborted transaction
+## Some tests need a real, aborted transaction
 
-Postgres aborts an _entire_ transaction on any query error — not just the failing query. Every later query on that connection fails with "current transaction is aborted" until something rolls back, in full or to a savepoint. A `try`/`catch` around the failing query doesn't save you from this on its own.
+Fun fact, postgres aborts an _entire_ transaction on any query error — not just the failing query. Every later query on that connection fails with "current transaction is aborted" until something rolls back, in full or to a savepoint. A `try`/`catch` around the failing query doesn't save you from this on its own.
 
-That's a real problem once every test is already running inside an ambient transaction: a test that deliberately triggers and recovers from a DB-level error (say, a unique constraint violation) can take down every query that runs afterwards in that test, or worse, in a later one on the same connection.
+This was a hidden problem, made very visible once tests were executed inside a transaction: tests that deliberately trigger and recover from a DB-level error now just fail. We had seen this occasionally in the test run, but now it was a constant.
 
-The fix, `runInSavepoint()`, runs the risky call inside its own nested savepoint on top of whatever transaction is already active, and only rolls back _that_, leaving the ambient transaction healthy:
+The fix, `runInSavepoint()`, runs the risky call inside its own nested transaction, and only rolls back _that_, leaving the ambient transaction healthy:
 
 ```ts
 try {
@@ -367,25 +347,15 @@ try {
 
 It's not just a testing trick, either — it's the same pattern our production code already uses to catch a constraint violation mid-request without taking the whole request down.
 
-For the handful of cases where none of this is enough — tests that need real, independent transactions racing each other (proving row locking works, for instance) — there's `skipTransactionWrapping(reason)`, which opts a block out entirely and falls back to a `clearDatabase()` safety net once it finishes. It's the escape hatch, not the default, and it comes with a mandatory `reason` so nobody has to reverse-engineer _why_ a block needed it six months later.
+## Everything happens at the same instant
 
-## Edge case three: everything happens at the same instant
-
-A smaller but more insidious one: rows created in the same test do end up with an identical `createdAt`, because Postgres's `now()` is fixed for the whole transaction rather than the wall clock. Depending on where the ambiguity actually bites, the fix is either a monotonic `nextCreatedAt()` in the factory, a real id-based tie-breaker in production code where the id is a reliable insertion-order surrogate, or — usually the right call — just asserting on the row's `id` instead of its position in an array. Not exotic, just another place the old truncate-based setup had been quietly hiding an assumption.
-
-## What I'd tell past me
-
-The tempting version of this story is "we replaced a flaky thing with a reliable thing." The more honest version is that the replacement exposed assumptions our tests had been quietly making for years — about ordering, about hook timing, about what "isolated" actually meant — that a full table wipe had been papering over the whole time.
-
-None of the fixes above were exotic. A monotonic counter. A documented hook-ordering gotcha. A savepoint instead of a full rollback. The hard part wasn't the Postgres feature — it was noticing where our tests had been relying on `clearDatabase()`'s side effects without anyone writing that reliance down anywhere. If there's a lesson in here, it's the same one I keep relearning: the "obviously safe" cleanup step is usually hiding a few assumptions that are worth writing down before you rip it out, not after.
+A smaller but more insidious issue is that records created in the same transaction all share the same `createdAt` timestamp. Why? Because Postgres's `now()` is fixed for the whole transaction. This highlighted broken tests and code that passed due to default ordering logic that wasn't explicit.
 
 ## The rabbit at the bottom of the hole
 
-Here's the bit I keep coming back to. Partway through this, we hit a test that only ever failed once it was running inside a transaction — never before, never in isolation, only as part of the wider suite, only with rollback-based isolation switched on. That's about as unhelpful a signal as a test can give you: the thing you just built to make failures more honest was itself producing one, and it wasn't obvious whether the bug was in the test, the production code, or the new transaction plumbing.
+Was the time invested worth it (2 hours dedicated to the task, plus 2 days of Claude fixing bugs in the background with occasional input)? It didn't fix everything and there is still work to do, but we exposed assumptions our tests had been quietly making for years — about ordering, about hook timing, about what "isolated" actually meant — that a full table wipe had been papering over the whole time.
 
-It turned out to be a real bug — a genuine race in how state was shared between two things that used to be accidentally separated by `clearDatabase()`'s side effects, and were now sharing a transaction that made the collision visible for the first time. Not a bug in the new approach; a bug the new approach finally had the honesty to show us. I'm not entirely sure why that felt like such a big reveal at the time — it's "a test caught a real bug," which is the whole point of a test suite — but it did. Maybe because it was proof the whole exercise hadn't just moved the flakiness somewhere else.
-
-That's the tree-and-rabbit of the title, really: VS Code's worktrees meant this didn't have to be my whole week to be worth chasing. I could spin the investigation off into its own worktree, on its own branch, and let it run as a side task while I stayed on my actual tickets in the main checkout — the kind of thing that, on paper, could have swallowed weeks of focus: a root-cause investigation, a rejected library, three edge cases, and a bug hiding under all of it. It still needed hand-holding, and it still went wrong more than once along the way — but that's what experience (and `git revert`) is for. In practice it stayed a contained side quest of a couple of days, running alongside everything else, without taking the rest of the work off track. Whatever else I take from this, that's the part worth remembering: the rabbit hole didn't need to become the whole week.
+But yes, I think so, and the rabbit, well my boss was happy — he was the one who had been working on this previously. I can already tell that our CI system is passing more consistently (after a few post-merge fixes). Overall this will save me time, but more than that it touches what I most enjoy about programming, finding a bug and fixing it.
 
 ---
 

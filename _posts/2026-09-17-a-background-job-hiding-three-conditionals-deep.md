@@ -1,35 +1,47 @@
 ---
-title: "A background job hiding three conditionals deep"
-subtitle: "Why executionPromise was the right call, why it still leaked into other tests, and what actually fixed it"
+title: "A solution that broke out tests"
+subtitle: "Objections.js's executionPromise - a hidden background worker"
 date: 2026-09-17
 ---
 
-Some bugs announce themselves. This one didn't — it took months, a suite that kept growing, and one very confused stray row in an unrelated test's count before anyone could say for certain what was going on.
+Some bugs break tests, and some hide in the shadows — and as we copied the pattern, the rot spread, we didn't even notice, attributing it to a single flakey test, when it was 50% of test runs.
 
-## The problem: a job enqueue three conditionals deep
+## The problem: a transaction wrapping a deeply nested call, that needed to trigger a background job.
 
-Somewhere inside converting a lead into a subscription plan, there's a helper called `enqueueInvoiceRequest`. You don't get to it directly — you get to it by going through `convertProduct`, which is itself dispatched to from a product-type switch one layer up, and even once you're inside it you still have to clear a legacy-plan early return, a brand check, an invoice-count guard, and a null check on a webhook request ID before the enqueue itself ever runs:
+Nested inside a critical process we needed to trigger a job (this job needed to delay until the transaction complete - as it needed to requery the current state from the DB). This was bad design, but also what we had to work with. Using the executionPromise allowed us to avoid returning a flag for a single execution path - a pattern that we had spread through teh codebase - just to trigger a job.
 
 ```ts
-// server/src/services/lead-conversion/plan/index.ts
-if (attributes.brandId === BRAND_ID.acme) {
-  await enqueueInvoiceRequest({ plan, trx });
+if (conditon0()) {
+  trx.transaction(trx1 =>  call1(trx1))
 }
 
-// ...inside enqueueInvoiceRequest:
-if (inboundWebhookRequestId) {
-  // We need to wait for the transaction to commit before we can add the item to the queue
-  attachToExecutionPromise(trx, "invoice-enqueue", async () => {
-    await invoiceQueue.addItem({
-      type: "create-invoice",
-      inboundWebhookRequestId,
-      planId: plan.id,
-    });
-  });
+const call1 (trx1) => () =>{
+  if (condition1()) {
+    trx1.transaction(trx2 =>  return call2(trx2)
+  }
+  return noCallBackRequired()
+}
+
+const call2 (trx2) => () =>{
+  if (condition2()) {
+    trx2.transaction(trx3 =>  return call2(trx3)
+  }
+  return noCallBackRequired()
+}
+......
+const callN (trxN) => () =>{
+  if (conditionN()) {
+    // we need to wait for the transaction to commit before this code executes
+    trxN.executionPromise.then(() => {
+      callExternalService()
+    })
+  }
+  return noCallBackRequired()
 }
 ```
 
-That comment — _"we need to wait for the transaction to commit"_ — is the whole problem in one line. The enqueue can't run inside the transaction, because the transaction might still roll back and there's no un-enqueueing a job. It also can't run synchronously right after `trx.commit()`, because nothing at this depth of the call stack has a reference to "right after commit" — it's three function calls and four conditionals away from whoever actually owns the transaction and decides when it commits.
+]
+_"we need to wait for the transaction to commit"_ — highlights the problem. The enqueue can't run inside the transaction, because the transaction might not be finished before the job starts. Just return a flag that would allow us to run the process after teh commit. But this function is called from multiple points in the application, so that a[pproach woudl spread the smell, making it harder to unwind in the future. ], It also can't run synchronously right after `trx.commit()`, as mention we could because return a flag, but that is a smeel, expecially when "right after commit" — it's N function calls and four conditionals away from whoever actually owns the transaction and decides when it commits.
 
 ## Why executionPromise, and what we didn't do instead
 
