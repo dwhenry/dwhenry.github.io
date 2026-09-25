@@ -1,6 +1,7 @@
 title: David Henry
 description: Fixing that thing I broke last week.
 url: "https://dwhenry.github.io"
+timezone: Europe/London
 baseurl: ""
 
 markdown: kramdown

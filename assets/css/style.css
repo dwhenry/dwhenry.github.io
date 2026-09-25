@@ -5,6 +5,7 @@
   --accent: #a63d40;
   --border: #e6e2da;
   --code-bg: #f4f1ea;
+  --summary: #757575;
   --max-width: 42rem;
 }
 
@@ -16,6 +17,7 @@
     --accent: #e0847f;
     --border: #2c2d31;
     --code-bg: #1f2024;
+    --summary: #8b8b8b;
   }
 }
 
@@ -107,7 +109,7 @@ a:hover { text-decoration: underline; }
 .post-list-summary {
   margin: 0.35rem 0 0;
   font-size: 0.9rem;
-  color: var(--muted);
+  color: var(--summary);
 }
 
 .pagination {
