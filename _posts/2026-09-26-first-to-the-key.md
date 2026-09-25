@@ -1,7 +1,7 @@
 ---
 title: "First to the key! First to the egg!"
 subtitle: "The future is closer than you think"
-summary: "A 15-month env-var migration that never moved, finished in a day with AI doing the typing and me doing the steering — plus the bugs the types dug up."
+summary: "A 15-month env-var migration that never moved, finished in two days with AI doing the typing and me doing the steering — plus the bugs the types dug up."
 date: 2026-09-26
 structure: in-medias-res
 ---
