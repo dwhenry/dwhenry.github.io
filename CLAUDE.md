@@ -64,3 +64,9 @@ chosen, since they're AI tells independent of structure:
 - A "the real twist is reframing X as Y" beat as the pivot of the piece.
 - A mandatory footer link to a code-reference page — only add one when there's
   genuinely too much code to inline, not as a habit every post repeats.
+
+## Git workflow: commit straight to main
+
+This is a personal blog — no PRs, no feature branches. Commit new posts and edits
+directly on `main` and `git push origin main`. Don't create `post/...` branches or
+open pull requests unless explicitly asked.
