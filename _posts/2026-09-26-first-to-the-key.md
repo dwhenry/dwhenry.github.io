@@ -25,12 +25,13 @@ So how did we get here? The new typed env module was added back in June 2025, it
 | Jun 2026    |                        229 |                        110 |
 | 24 Sep 2026 |                        217 |                        153 |
 | 25 Sep 2026 |                        107 |                        273 |
+| 26 Sep 2026 |                          0 |                        389 |
 
 New code used the new module, old code stayed exactly where it was, and at one point the old way had actually gained files. 15 months, and we'd moved a grand total of 24.
 
 It reminds me of the first race in _Ready Player One_. Everyone puts their foot down and heads for the finish line, King Kong smashes them all, and nobody ever gets there... until Parzival works out the trick is to go backwards. I'm not sure how far the metaphor stretches, since we didn't go backwards like Parzival. But we sure as hell didn't finish the race as expected either — a common trait with migrations in our codebase.
 
-That last row was the last hour of my day (plus a little overtime). It wasn't a sprint goal or a ticket, it was a side project, running in its own git worktree while I got on with my actual work, with AI doing most of the typing and me doing the steering (and the reviewing, lots of reviewing). I've talked about working this way before, and I'll go into it properly in a future post. If it carries on at this pace, the old module should be gone by the end of next week.
+Those last two rows were an hour or so at the end of two days (plus a little overtime). It wasn't a sprint goal or a ticket, it was a side project, running in its own git worktree while I got on with my actual work, with AI doing most of the typing and me doing the steering (and the reviewing, lots of reviewing). I've talked about working this way before, and I'll go into it properly in a future post.
 
 A change touching this many files could easily turn into a mess, especially with an AI doing the bulk of the work. So before it started, we agreed some ground rules — and "agreed" here means I set them and then spent the day making sure they were actually being followed:
 
@@ -49,9 +50,9 @@ The tests weren't much better. One suite only passed because later tests relied 
 >
 > — Wade and Aech, _Ready Player One_
 
-The race isn't over. There are still 107 files on the old module. But for the first time I can see a finish line, which is more than this migration has ever had.
+And then the race was over. The old module is gone — deleted, along with its `@deprecated` comment. A migration that spent 15 months without a finish line crossed it in two days.
 
-And it isn't the only one. When I actually took notice, I found six migrations in this codebase that had been started and never finished. This one is nearly there... the other five are still sat on the starting line, but I don't imagine it will stay that way for long.
+And it isn't the only one. When I actually took notice, I found six migrations in this codebase that had been started and never finished. This one is finished... the other five are still sat on the starting line, but I don't imagine it will stay that way for long.
 
 So when you are next waiting for your task to finish — AI, test suite or something else — maybe that thing you could never get to could be done now.
 
