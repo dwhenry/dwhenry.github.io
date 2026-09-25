@@ -1,5 +1,6 @@
 ---
 title: "Angular generic error handling"
+summary: "Handling server-side errors generically in an Angular app — why interceptors turned out to be a much simpler answer than decorators."
 date: 2014-08-20
 ---
 

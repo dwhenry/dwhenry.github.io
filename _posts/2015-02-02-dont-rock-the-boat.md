@@ -1,5 +1,6 @@
 ---
 title: "Don’t rock the boat?"
+summary: "Settling into a new contract means changing old routines — spotting what to improve and adapting is what keeps contracting exciting."
 date: 2015-02-02
 ---
 

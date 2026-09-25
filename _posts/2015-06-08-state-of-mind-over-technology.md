@@ -1,5 +1,6 @@
 ---
 title: "State of mind over technology."
+summary: "You don't need to know the whole stack before starting a job — personal projects are how you show what you can do, not just what you've done."
 date: 2015-06-08
 ---
 

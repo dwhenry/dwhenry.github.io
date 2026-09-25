@@ -1,5 +1,6 @@
 ---
 title: "A test too far?"
+summary: "How I approached a 'simple' GitHub technical test as a senior developer — and the untested Sinatra page that came back to bite me."
 date: 2014-11-02
 ---
 

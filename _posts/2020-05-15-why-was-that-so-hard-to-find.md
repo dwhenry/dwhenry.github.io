@@ -1,5 +1,6 @@
 ---
 title: "Why was that so hard to find"
+summary: "Pushing updates from external code into React components turned out to be easy with hooks — once I finally worked out how useEffect fits in."
 date: 2020-05-15
 ---
 

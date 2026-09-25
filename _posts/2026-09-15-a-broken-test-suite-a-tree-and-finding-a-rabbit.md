@@ -1,6 +1,7 @@
 ---
 title: "A broken test suite, a tree and finding a rabbit"
 subtitle: "How we de-flaked our test suite by trusting a database feature that already existed"
+summary: "How we de-flaked our TypeScript test suite by swapping a truncate-everything cleanup helper for Postgres transactions — savepoints, lint rules and all."
 date: 2026-09-15
 structure: narrative-arc
 ---

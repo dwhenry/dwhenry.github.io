@@ -1,5 +1,6 @@
 ---
 title: "Celebrating the little things"
+summary: "Harry's FoxG1 diagnosis changed what we expected as parents — now we share in every little achievement, and he brightens the life of everyone he meets."
 date: 2020-07-20
 ---
 

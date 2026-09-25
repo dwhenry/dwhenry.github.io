@@ -1,5 +1,6 @@
 ---
 title: "Don’t fear the delete button"
+summary: "Advice for new developers: know when to delete the bad branch or throw away the wrong data model and start again — it will cost you less than pushing on."
 date: 2014-08-28
 ---
 

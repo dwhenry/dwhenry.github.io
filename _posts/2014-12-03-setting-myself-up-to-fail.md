@@ -1,5 +1,6 @@
 ---
 title: "Setting myself up to fail"
+summary: "Treating the timeline as the most important part of a project has burned me more than once — some thoughts on keeping quality under deadline pressure."
 date: 2014-12-03
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Don’t chase your tail."
+summary: "How I ended up with circular dependencies between my Angular modules, and how inverting the configuration flow — tell, don't ask — fixed it."
 date: 2014-09-23
 ---
 

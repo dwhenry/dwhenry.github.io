@@ -1,5 +1,6 @@
 ---
 title: "Drugs are bad.."
+summary: "Removing the Pusher dependency from my test suite by running an open source clone on CI, with the RSpec helper and bash script to manage it."
 date: 2014-09-20
 ---
 

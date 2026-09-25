@@ -1,5 +1,6 @@
 ---
 title: "So I have an idea but no design"
+summary: "After four failed attempts at building a turn-based game, starting with the game engine as a gem instead of the interface finally worked."
 date: 2016-02-05
 ---
 

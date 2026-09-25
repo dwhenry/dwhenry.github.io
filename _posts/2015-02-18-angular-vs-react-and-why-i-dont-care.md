@@ -1,5 +1,6 @@
 ---
 title: "Angular v’s React - and why I don’t care"
+summary: "Technologies are tools, not teams to pick — choose what suits the current job and you as a developer, same as Rails versus Sinatra."
 date: 2015-02-18
 ---
 

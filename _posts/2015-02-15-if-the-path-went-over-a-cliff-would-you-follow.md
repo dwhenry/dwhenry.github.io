@@ -1,5 +1,6 @@
 ---
 title: "“If everyone else walked off a cliff, would you do it too” - mothers everywhere"
+summary: "Why some of the opinionated advice in React's official docs worries me — technical documentation isn't the place for it."
 date: 2015-02-15
 ---
 

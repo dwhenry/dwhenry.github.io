@@ -1,5 +1,6 @@
 ---
 title: "Home Again"
+summary: "Working from home two days a week saved my sanity with a small baby at home — my recommendations for not losing the privilege."
 date: 2017-10-26
 ---
 

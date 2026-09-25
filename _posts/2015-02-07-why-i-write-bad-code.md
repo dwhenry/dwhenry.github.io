@@ -1,5 +1,6 @@
 ---
 title: "Why I write bad code"
+summary: "I write bad code because there's no other way to start — the trick is improving it before anyone else has to live with it."
 date: 2015-02-07
 ---
 

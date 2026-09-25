@@ -1,5 +1,6 @@
 ---
 title: "So what is the senior developer thing anyway"
+summary: "What actually makes someone a senior developer? For me it's being the person others come to for feedback when they're unsure of their code."
 date: 2014-08-21
 ---
 

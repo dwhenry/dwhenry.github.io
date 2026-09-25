@@ -1,5 +1,6 @@
 ---
 title: "A little change"
+summary: "A new job at the Treasury, then straight back to South London — 60 meters down the road from my last employer. Life is an adventure."
 date: 2016-02-18
 ---
 

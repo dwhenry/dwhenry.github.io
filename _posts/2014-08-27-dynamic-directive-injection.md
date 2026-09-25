@@ -1,5 +1,6 @@
 ---
 title: "Dynamic Directive Injection"
+summary: "A small Angular directive that injects other directives dynamically, so different users can get different features behind feature flags."
 date: 2014-08-27
 ---
 

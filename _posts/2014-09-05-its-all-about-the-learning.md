@@ -1,5 +1,6 @@
 ---
 title: "It’s all about the learning"
+summary: "Disagreements and feedback are what made me the developer I am — pity the people who think their code is beyond question."
 date: 2014-09-05
 ---
 

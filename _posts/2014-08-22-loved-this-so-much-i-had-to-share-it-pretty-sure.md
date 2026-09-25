@@ -1,5 +1,6 @@
 ---
 title: "loved this so much i had to share it.. pretty sure the only person reading the blog was the person posting it.."
+summary: "A shared image that made me laugh, from back when I was fairly sure the only person reading this blog was me."
 date: 2014-08-22
 ---
 

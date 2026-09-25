@@ -1,5 +1,6 @@
 ---
 title: "Start small"
+summary: "Two big pieces of work, both approached the same way: start with a small proof of concept and grow it through a series of mini-projects."
 date: 2014-09-09
 ---
 

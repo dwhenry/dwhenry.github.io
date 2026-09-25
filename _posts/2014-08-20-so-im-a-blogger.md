@@ -1,5 +1,6 @@
 ---
 title: "So I’m a blogger"
+summary: "The very first post: after moving to contracting I finally started a blog, partly for others but mostly as a personal reference for things I learn."
 date: 2014-08-20
 ---
 

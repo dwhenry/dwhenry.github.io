@@ -1,6 +1,7 @@
 ---
 title: "Enthusiasm is dead.. 
 Long live enthusiasm"
+summary: "An evening talking through a problem with a friend gave me back the enthusiasm for personal projects and blogging that laziness had eaten."
 date: 2015-03-16
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Process Queue v’s Promise Chain"
+summary: "Keeping tag updates in order in an Angular app by chaining promises, instead of building the Ruby-style process queue I first reached for."
 date: 2014-08-22
 ---
 

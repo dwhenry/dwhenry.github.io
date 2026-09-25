@@ -1,5 +1,6 @@
 ---
 title: "Are all editors equal?"
+summary: "Why I stick to common GUI editors as a contractor, and a plea to stop pushing heavily customised vim setups on junior developers."
 date: 2014-09-02
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Is being lazy bad for you?"
+summary: "I try to be as lazy as possible when coding, but is picking a third-party service because they once gave me a free t-shirt taking it too far?"
 date: 2014-09-19
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Optimising for trouble"
+summary: "I designed my card game around Heroku's database row limit before checking it was a real problem — it wasn't, and Postgres locking was the easy answer all along."
 date: 2020-05-15
 ---
 

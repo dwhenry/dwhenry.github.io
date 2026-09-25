@@ -11,6 +11,7 @@ layout: default
     <a class="post-list-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
     <time class="post-list-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %B %Y" }}</time>
     {% if post.subtitle %}<p class="post-list-subtitle">{{ post.subtitle }}</p>{% endif %}
+    {% if post.summary %}<p class="post-list-summary">{{ post.summary }}</p>{% endif %}
   </li>
   {% endfor %}
 </ul>

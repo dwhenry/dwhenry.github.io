@@ -1,5 +1,6 @@
 ---
 title: "You want to “what” now??"
+summary: "A friend wanted to hack the output of a gem I helped write; subclassing the JSON builder was far easier than fighting the library."
 date: 2014-09-25
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Rebasing - I always tread carefully."
+summary: "Rebasing is like time travel: mostly fine, until you kill the wrong butterfly. Why I still have my doubts about rewriting git history."
 date: 2015-03-29
 ---
 

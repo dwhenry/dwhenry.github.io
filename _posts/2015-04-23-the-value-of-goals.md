@@ -1,5 +1,6 @@
 ---
 title: "The value of goals"
+summary: "Setting quarterly goals when you don't yet have the metrics to measure success — the pragmatic approach our team landed on."
 date: 2015-04-23
 ---
 

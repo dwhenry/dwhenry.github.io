@@ -1,5 +1,6 @@
 ---
 title: "Meta, meta, meta.."
+summary: "Metaprogramming is a tool you should read about and then mostly never use — plus the rare cases where it genuinely simplifies a problem."
 date: 2014-09-11
 ---
 

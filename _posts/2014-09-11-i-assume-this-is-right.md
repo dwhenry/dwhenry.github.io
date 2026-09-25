@@ -1,5 +1,6 @@
 ---
 title: "I assume this is right.."
+summary: "We all work on assumptions every day; the trick is being confident in them while staying ready to pivot when they prove wrong."
 date: 2014-09-11
 ---
 

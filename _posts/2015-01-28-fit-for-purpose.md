@@ -1,5 +1,6 @@
 ---
 title: "Fit for purpose?"
+summary: "On 'company fit' in interviews: the best team I worked in thrived because we weren't all the same, so talk about what you add, not how you conform."
 date: 2015-01-28
 ---
 

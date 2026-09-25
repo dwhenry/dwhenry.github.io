@@ -1,5 +1,6 @@
 ---
 title: "Blast from the past"
+summary: "An unsent blog draft from 2011 about the struggles of pairing with juniors, and what I've learned about it in the years since."
 date: 2014-10-27
 ---
 

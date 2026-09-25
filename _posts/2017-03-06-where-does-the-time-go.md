@@ -1,5 +1,6 @@
 ---
 title: "Where does the time go?"
+summary: "Treating a personal project like my day job — backlog, milestones, realistic expectations — kept it alive well past the usual two weeks of enthusiasm."
 date: 2017-03-06
 ---
 

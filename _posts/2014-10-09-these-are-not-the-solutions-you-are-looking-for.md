@@ -1,5 +1,6 @@
 ---
 title: "These are not the solutions you are looking for.."
+summary: "Filtering, grouping and sorting in Angular, and how stepping back from a complicated array-diffing fix led to a much simpler answer."
 date: 2014-10-09
 ---
 

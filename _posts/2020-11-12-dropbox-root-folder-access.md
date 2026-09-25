@@ -1,5 +1,6 @@
 ---
 title: "Dropbox root folder access"
+summary: "Getting the Dropbox API to see the team's shared folders instead of just my personal one, via a namespace header and a small gem PR."
 date: 2020-11-12
 ---
 

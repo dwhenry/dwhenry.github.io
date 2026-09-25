@@ -1,5 +1,6 @@
 ---
 title: "Getting a snapshot downloading from Heroku Elasticsearch"
+summary: "Getting an Elasticsearch snapshot out of Heroku by pointing a second snapshot repository at your own S3 bucket, region quirks included."
 date: 2020-06-23
 ---
 

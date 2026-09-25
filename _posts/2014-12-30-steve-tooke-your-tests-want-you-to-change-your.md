@@ -1,5 +1,6 @@
 ---
 title: "Steve Tooke - Your tests want you to change your design"
+summary: "A shared link to Steve Tooke's piece on how your tests want you to change your design."
 date: 2014-12-30
 ---
 

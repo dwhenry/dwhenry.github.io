@@ -1,5 +1,6 @@
 ---
 title: "Are interviews like speed dating?"
+summary: "Feedback on an interview pairing challenge — reimplementing SecureRandom — that tested Ruby trivia more than it tested real coding skill."
 date: 2015-01-14
 ---
 

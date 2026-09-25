@@ -1,5 +1,6 @@
 ---
 title: "Thinking before programming"
+summary: "A link to Alistair Cockburn's piece on thinking through the algorithm before you start coding, rather than waiting for it to emerge."
 date: 2014-12-02
 ---
 

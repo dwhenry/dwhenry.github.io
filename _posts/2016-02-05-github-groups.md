@@ -1,5 +1,6 @@
 ---
 title: "Github groups"
+summary: "Tidying up nearly 50 GitHub repositories by splitting them into separate organisations for archived code and interview code tests."
 date: 2016-02-05
 ---
 

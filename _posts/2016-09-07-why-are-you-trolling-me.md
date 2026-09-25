@@ -1,5 +1,6 @@
 ---
 title: "Why are you trolling me?"
+summary: "Commenting on a friend's public code isn't trolling — when GitHub history is part of hiring, it's helping them get their next job."
 date: 2016-09-07
 ---
 

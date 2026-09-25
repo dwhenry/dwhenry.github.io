@@ -1,5 +1,6 @@
 ---
 title: "You’re doing it wrong.."
+summary: "I spent two days building the wrong thing because my understanding of the requirements didn't match the client's — and thought about how to stop that happening again."
 date: 2014-08-22
 ---
 

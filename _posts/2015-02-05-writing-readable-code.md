@@ -1,5 +1,6 @@
 ---
 title: "Writing readable code"
+summary: "Using a technical test to show how simple, staged refactorings turn working-but-opaque Ruby into code that's easy to read and extend."
 date: 2015-02-05
 ---
 

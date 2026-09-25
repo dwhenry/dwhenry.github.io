@@ -1,5 +1,6 @@
 ---
 title: "Are you expert?"
+summary: "What makes a programmer good isn't being better than everyone else — it's the willingness to question yourself and keep learning."
 date: 2015-06-20
 ---
 

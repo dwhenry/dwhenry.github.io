@@ -1,5 +1,6 @@
 ---
 title: "Clever.. Clever.. Clever.."
+summary: "Clever code is rarely better code — a JavaScript reduce trick compared with the boring loop that turned out simpler anyway."
 date: 2014-10-28
 ---
 

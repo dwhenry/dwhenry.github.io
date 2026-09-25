@@ -1,5 +1,6 @@
 ---
 title: "Is that an object I see in your pocket.."
+summary: "A worked Ruby example of object extraction done halfway, and how finishing the refactoring properly leaves the code in a much better place."
 date: 2014-09-03
 ---
 

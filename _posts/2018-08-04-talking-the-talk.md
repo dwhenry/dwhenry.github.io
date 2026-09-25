@@ -1,5 +1,6 @@
 ---
 title: "Talking the talk"
+summary: "Setting context before diving into detail is the difference between communicating and confusing, whoever in the business you're talking to."
 date: 2018-08-04
 ---
 

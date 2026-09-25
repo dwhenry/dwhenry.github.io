@@ -1,5 +1,6 @@
 ---
 title: "“Have you tried turning it off and on again” - a guide to surviving the end of the world"
+summary: "A tongue-in-cheek survival guide for the coming apocalypse, in which I officially call dibs on being a blacksmith."
 date: 2015-02-07
 ---
 

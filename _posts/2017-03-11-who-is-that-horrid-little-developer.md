@@ -1,5 +1,6 @@
 ---
 title: "Who is that horrid little developer?"
+summary: "We all write terrible code sometimes — a production one-liner gated on rand(10), and why understanding beats blame."
 date: 2017-03-11
 ---
 

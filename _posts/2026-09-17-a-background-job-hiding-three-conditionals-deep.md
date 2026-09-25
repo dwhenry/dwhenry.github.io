@@ -1,6 +1,7 @@
 ---
 title: "A solution that broke out tests"
 subtitle: "Objections.js's executionPromise - a hidden background worker"
+summary: "Objection.js's executionPromise let us defer a job until a transaction committed, then quietly broke half our test runs — capturing it like a job queue fixed that."
 date: 2026-09-17
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "It was like that when I found it.."
+summary: "A fun RSpec gotcha: a self-referencing let block that segfaults on Ruby 2.1 and above."
 date: 2014-09-04
 ---
 

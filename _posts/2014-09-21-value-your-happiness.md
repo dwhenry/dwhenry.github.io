@@ -1,5 +1,6 @@
 ---
 title: "Value your happiness"
+summary: "Never believe unhappiness at work can be fixed by a pay rise — the best part of some jobs was letting go and moving on."
 date: 2014-09-21
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Simple <strike>Form</strike> Foe"
+summary: "Why I dropped simple_form once I needed custom renders, and the small form helper and partial I wrote instead."
 date: 2017-03-11
 ---
 

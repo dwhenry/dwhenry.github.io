@@ -1,5 +1,6 @@
 ---
 title: "Order of magnitude"
+summary: "Two Ruby solutions to an Advent of Code puzzle, and how a 100x bigger problem space forced a rethink from arrays to a linked list."
 date: 2018-12-17
 ---
 

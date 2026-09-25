@@ -1,5 +1,6 @@
 ---
 title: "Time v’s Output"
+summary: "More hours at the desk doesn't mean more output — why regular breaks matter for long-term productivity when the work is mentally hard."
 date: 2014-08-29
 ---
 

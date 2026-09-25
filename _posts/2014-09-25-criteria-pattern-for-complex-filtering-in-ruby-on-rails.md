@@ -1,5 +1,6 @@
 ---
 title: "Criteria pattern for complex filtering in Ruby on Rails | Railsware Blog"
+summary: "A link to Railsware's criteria pattern for complex filtering in Rails — an interesting idea for modular queries, though I'm not 100% sold."
 date: 2014-09-25
 ---
 

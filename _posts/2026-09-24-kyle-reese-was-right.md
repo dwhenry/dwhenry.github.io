@@ -1,6 +1,7 @@
 ---
 title: "Kyle (Reese) was right"
 subtitle: "The future isn't written, but it probably still needs developers"
+summary: "Colleagues keep asking if AI means the end of developers. I think the job changes rather than disappears — someone still has to care about the architecture."
 date: 2026-09-24
 structure: plain-essay
 ---

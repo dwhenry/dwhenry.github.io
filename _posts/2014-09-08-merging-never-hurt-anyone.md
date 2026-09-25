@@ -1,5 +1,6 @@
 ---
 title: "Merging never hurt anyone"
+summary: "A contrarian take on git best practice: merge instead of rebasing, never rewrite history, and be proud of your bad commits."
 date: 2014-09-08
 ---
 

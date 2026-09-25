@@ -1,5 +1,6 @@
 ---
 title: "Angular, and what I did wrong.."
+summary: "I love Angular, but single page apps, bad blogs and the 2.0 rewrite are why I probably won't be using it on my next project."
 date: 2015-02-13
 ---
 

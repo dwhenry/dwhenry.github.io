@@ -1,5 +1,6 @@
 ---
 title: "Are you in the “zone”?"
+summary: "I've never been 'in the zone' — breaking problems into small manageable parts means I can swap in and out of tasks without needing one."
 date: 2015-03-29
 ---
 

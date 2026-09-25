@@ -1,5 +1,6 @@
 ---
 title: "Perception is everything"
+summary: "How I accidentally burned a recruiter by taking a job months after he'd first mentioned it — a story about perception and other people's point of view."
 date: 2014-11-01
 ---
 

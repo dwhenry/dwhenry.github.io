@@ -1,5 +1,6 @@
 ---
 title: "It can be cold on the outside.."
+summary: "Two unrelated events made me realise I show my personal projects no real love — no design, no milestones, no plan — and how I intend to fix that."
 date: 2014-11-27
 ---
 

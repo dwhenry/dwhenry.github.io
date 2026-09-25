@@ -1,5 +1,6 @@
 ---
 title: "You want how much"
+summary: "Contractor rates, the risk clients take on, and why staying contracting long-term means constantly investing in your own skills."
 date: 2014-11-05
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "Why was this sooo hard"
+summary: "Setting up this blog took far more effort than it should have — non-responsive themes, comments off by default, and no sharing buttons."
 date: 2014-08-23
 ---
 

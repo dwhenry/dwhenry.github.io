@@ -1,5 +1,6 @@
 ---
 title: "The future is unknown.."
+summary: "Career progression for developers seems to offer two paths, both ending in management — and I'm honestly not sure where mine leads."
 date: 2015-01-28
 ---
 
