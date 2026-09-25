@@ -70,3 +70,10 @@ chosen, since they're AI tells independent of structure:
 This is a personal blog — no PRs, no feature branches. Commit new posts and edits
 directly on `main` and `git push origin main`. Don't create `post/...` branches or
 open pull requests unless explicitly asked.
+
+## Stage before each round of edits
+
+When working on a post, `git add` it before making changes to it — both before
+the assistant edits and before handing a draft over for the user to edit — so
+`git diff` shows only the latest round of changes. Stage again after each round
+is reviewed.
