@@ -41,20 +41,23 @@ chronological account. Avoid defaulting to one "essay" template.
 - `walkthrough` — step-by-step, code-first, narration kept to a minimum between steps.
 - `list-of-lessons` — short intro, then the bulk of the post is a numbered/bulleted
   list of concrete takeaways rather than a flowing narrative.
+- `headed-essay` — a run of `## <claim>` headings, each followed by a short
+  paragraph or two and a sourced quote; no narrative arc between sections.
 
 **Selecting one, mechanically (not by just picking what feels different):**
-1. Find the template of the most recent post: check its front matter for a
-   `structure:` field (e.g. `structure: diary`). If recent posts predate this field,
-   treat their shape as `narrative-arc` (the problem → alternatives → reframe →
-   caveat shape used above) for the purposes of exclusion.
-2. Run an actual random pick, excluding that one template. This repo always has
-   Ruby available (it's a Jekyll site), so use it rather than `shuf` (not on macOS):
-   `ruby -e "puts (%w[diary problem-solutions in-medias-res plain-essay walkthrough list-of-lessons] - ['<last-template>']).sample"`
-   Don't substitute your own judgement for the RNG here — the point is to avoid
-   the assistant's own bias toward one "safe" shape.
-3. Add `structure: <chosen>` to the new post's front matter (not rendered, just
-   metadata for the next run of this rule) and actually write to that shape —
-   picking a template and then writing the usual essay anyway defeats the point.
+run `ruby bin/structure`. It reads the `structure:` field of the most recent
+*dated* post (posts that predate the field count as `narrative-arc`, the
+problem → alternatives → reframe → caveat shape used above), excludes that one
+template, does an actual random pick from the rest, and prints what the chosen
+template means plus which existing posts use it. `ruby bin/structure --list`
+shows every template with its description and examples. The list it rolls from
+is the bullets above, so adding a template here is enough.
+
+Don't substitute your own judgement for the RNG — the point is to avoid the
+assistant's own bias toward one "safe" shape. Add `structure: <chosen>` to the
+new post's front matter (not rendered, just metadata for the next run) and
+actually write to that shape — picking a template and then writing the usual
+essay anyway defeats the point.
 
 **Regardless of template**, avoid these specific tics regardless of which shape is
 chosen, since they're AI tells independent of structure:

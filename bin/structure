@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+#
+# Roll the structure template for the next blog post.
+#
+#   ruby bin/structure            # exclude the latest post's template, pick one, explain it
+#   ruby bin/structure --list     # show every template, what it means, and which posts use it
+#   ruby bin/structure --exclude diary   # override which template is excluded
+#
+# The template list and descriptions live in AGENTS.md (the "Template list"
+# bullets). This script only reads them, so there is one place to edit.
+
+ROOT = File.expand_path("..", __dir__)
+AGENTS = File.join(ROOT, "AGENTS.md")
+POSTS = File.join(ROOT, "_posts")
+
+# Parse `- `name` — description` bullets, including indented continuation lines.
+def templates
+  list = {}
+  current = nil
+  in_list = false
+  File.foreach(AGENTS) do |line|
+    in_list = true if line.start_with?("**Template list**")
+    next unless in_list
+    break if in_list && line.start_with?("**Selecting one")
+
+    if (m = line.match(/^- `([a-z-]+)` — (.*)$/))
+      current = m[1]
+      list[current] = m[2].strip
+    elsif current && line.match?(/^\s{2,}\S/)
+      list[current] += " " + line.strip
+    elsif line.strip.empty?
+      current = nil
+    end
+  end
+  list
+end
+
+def posts_by_structure
+  by = Hash.new { |h, k| h[k] = [] }
+  Dir.children(POSTS).sort.each do |name|
+    next unless name.end_with?(".md")
+    front = File.read(File.join(POSTS, name))[/\A---\n(.*?)\n---/m, 1].to_s
+    tag = front[/^structure:\s*(\S+)/, 1]
+    by[tag || "(untagged)"] << name
+  end
+  by
+end
+
+def latest_post_template
+  latest = Dir.children(POSTS).grep(/^\d{4}-\d{2}-\d{2}-.*\.md$/).max # filename date, not mtime
+  return [nil, nil] unless latest
+  front = File.read(File.join(POSTS, latest))[/\A---\n(.*?)\n---/m, 1].to_s
+  [latest, front[/^structure:\s*(\S+)/, 1] || "narrative-arc"]
+end
+
+def describe(name, all, by_post)
+  puts "#{name}"
+  puts "  #{all[name] || '(not in the AGENTS.md template list)'}"
+  used = by_post[name]
+  if used.empty?
+    puts "  used by: no post yet"
+  else
+    puts "  used by: #{used.join(', ')}"
+  end
+end
+
+all = templates
+by_post = posts_by_structure
+
+if ARGV.include?("--list")
+  (all.keys | by_post.keys).reject { |k| k == "(untagged)" }.each { |t| describe(t, all, by_post); puts }
+  puts "untagged (pre-rotation) posts: #{by_post['(untagged)'].size}"
+  exit
+end
+
+latest, exclude = latest_post_template
+why = "latest post: #{latest} (structure: #{exclude})"
+if (i = ARGV.index("--exclude"))
+  exclude = ARGV[i + 1] or abort("--exclude needs a template name")
+  why = "--exclude override"
+end
+
+pool = all.keys - [exclude]
+abort("no templates left after excluding #{exclude}") if pool.empty?
+pick = pool.sample
+
+puts "excluded: #{exclude} (#{why})"
+puts "rolled from: #{pool.join(', ')}"
+puts
+describe(pick, all, by_post)
+puts
+puts "Add `structure: #{pick}` to the new post's front matter and write to that shape."
