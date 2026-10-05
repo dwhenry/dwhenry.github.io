@@ -32,16 +32,16 @@ Enigma's famous weakness was that a letter could never encrypt to itself. I'm no
 .rp1 section { margin: 1.5em 0; }
 .rp1-nudge { font-style: italic; opacity: 0.8; }
 .rp1-form { display: flex; gap: 0.5em; align-items: center; flex-wrap: wrap; margin: 1em 0 2em; }
-.rp1-form input { font: inherit; padding: 0.4em 0.6em; min-width: 12em; }
-.rp1-form button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; }
+.rp1-form input { font: inherit; padding: 0.4em 0.6em; min-width: 12em; color: var(--fg); background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; }
+.rp1-form button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; color: var(--fg); background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; }
 .rp1-msg { opacity: 0.8; }
 /* "Someone" is the link. Looks like text until clicked. */
 .clickme { cursor: text; }
-.rp1-badge { position: fixed; top: 0.75rem; right: 0.75rem; z-index: 10; padding: 0.3em 0.7em; border: 1px solid currentColor; border-radius: 999px; background: Canvas; font-size: 0.85em; font-variant-numeric: tabular-nums; opacity: 0.85; }
-.rp1-badge-final { font-weight: bold; opacity: 1; }
-.rp1-modal { max-width: 24em; padding: 1.2em 1.5em; border: 1px solid currentColor; border-radius: 4px; font: inherit; color: inherit; background: Canvas; }
-.rp1-modal::backdrop { background: rgba(0, 0, 0, 0.4); }
-.rp1-modal button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; }
+.rp1-badge { position: fixed; top: 0.75rem; right: 0.75rem; z-index: 10; padding: 0.3em 0.7em; border: 1px solid var(--border); border-radius: 999px; color: var(--fg); background: var(--code-bg); font-size: 0.85em; font-variant-numeric: tabular-nums; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+.rp1-badge-final { font-weight: bold; border-color: var(--accent); }
+.rp1-modal { max-width: 24em; padding: 1.2em 1.5em; border: 1px solid var(--border); border-radius: 6px; font: inherit; color: var(--fg); background: var(--bg); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35); }
+.rp1-modal::backdrop { background: rgba(0, 0, 0, 0.55); }
+.rp1-modal button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; color: var(--fg); background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; }
 .rp1-score { border-collapse: collapse; margin: 1em 0; }
 .rp1-score th { text-align: left; font-weight: normal; padding: 0.3em 1em 0.3em 0; }
 .rp1-score td { text-align: right; padding: 0.3em 0 0.3em 1em; font-variant-numeric: tabular-nums; }
