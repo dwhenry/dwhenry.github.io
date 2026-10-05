@@ -35,7 +35,9 @@ Enigma's famous weakness was that a letter could never encrypt to itself. I'm no
 .rp1-form input { font: inherit; padding: 0.4em 0.6em; min-width: 12em; }
 .rp1-form button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; }
 .rp1-msg { opacity: 0.8; }
-.clickme { cursor: text; }
+/* The space after "Someone". Padding widens the hit area over the
+   neighbouring letters; the negative margin cancels it visually. */
+.clickme { cursor: text; padding: 0.2em 0.35em; margin: 0 -0.35em; position: relative; z-index: 1; }
 .rp1-score { border-collapse: collapse; margin: 1em 0; }
 .rp1-score th { text-align: left; font-weight: normal; padding: 0.3em 1em 0.3em 0; }
 .rp1-score td { text-align: right; padding: 0.3em 0 0.3em 1em; font-variant-numeric: tabular-nums; }
