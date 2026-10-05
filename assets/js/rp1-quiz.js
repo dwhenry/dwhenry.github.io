@@ -100,7 +100,17 @@
     const store = window.__dw || { get: () => null, set: () => {}, clear: () => {} };
     let state = store.get();
     if (!state || !Array.isArray(state.answers)) state = fresh();
-    const save = () => store.set(state);
+    // Other tabs (and the back button restoring this page) move the stored
+    // tally on without this copy knowing, so fold the stored counts in before
+    // every write rather than overwriting them with stale ones.
+    const save = () => {
+      const stored = store.get();
+      if (stored && stored.started === state.started) {
+        state.pages = Math.max(state.pages || 0, stored.pages || 0);
+        state.misses = Math.max(state.misses || 0, stored.misses || 0);
+      }
+      store.set(state);
+    };
     save();
 
     function render(index, html) {
