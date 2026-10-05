@@ -108,6 +108,7 @@
       if (stored && stored.started === state.started) {
         state.pages = Math.max(state.pages || 0, stored.pages || 0);
         state.misses = Math.max(state.misses || 0, stored.misses || 0);
+        state.someone = !!(state.someone || stored.someone);
       }
       store.set(state);
     };
