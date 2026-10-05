@@ -37,6 +37,8 @@ Enigma's famous weakness was that a letter could never encrypt to itself. I'm no
 .rp1-msg { opacity: 0.8; }
 /* "Someone" is the link. Looks like text until clicked. */
 .clickme { cursor: text; }
+.rp1-badge { position: fixed; top: 0.75rem; right: 0.75rem; z-index: 10; padding: 0.3em 0.7em; border: 1px solid currentColor; border-radius: 999px; background: Canvas; font-size: 0.85em; font-variant-numeric: tabular-nums; opacity: 0.85; }
+.rp1-badge-final { font-weight: bold; opacity: 1; }
 .rp1-modal { max-width: 24em; padding: 1.2em 1.5em; border: 1px solid currentColor; border-radius: 4px; font: inherit; color: inherit; background: Canvas; }
 .rp1-modal::backdrop { background: rgba(0, 0, 0, 0.4); }
 .rp1-modal button { font: inherit; padding: 0.4em 0.9em; cursor: pointer; }

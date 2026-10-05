@@ -112,7 +112,25 @@
         state.someone = !!(state.someone || stored.someone);
       }
       store.set(state);
+      badge();
     };
+
+    // Running score, top right. Same sums as the scorecard: ten an answer,
+    // minus pages, misses and one per five minutes, plus the bonus.
+    const badgeEl = document.createElement('div');
+    badgeEl.className = 'rp1-badge';
+    badgeEl.setAttribute('aria-live', 'polite');
+    document.body.appendChild(badgeEl);
+    function badge() {
+      const s = store.get() || state;
+      const end = s.finished || Date.now();
+      const slow = s.started ? Math.floor((end - s.started) / 300000) : 0;
+      const score = (s.answers || []).length * 10 - (s.pages || 0) - (s.misses || 0) - slow + (s.someone ? 20 : 0);
+      badgeEl.textContent = (s.finished ? 'final ' : 'score ') + score;
+      badgeEl.classList.toggle('rp1-badge-final', !!s.finished);
+    }
+    setInterval(badge, 30000);
+    window.addEventListener('storage', badge);
     save();
 
     function render(index, html) {
